@@ -19,7 +19,11 @@ The game will also contain:
 
 ### Wireframes
 
-This game will have a start menu where players will be able to view instructions and start the game play pressing "play".  Once the game has started, the space ship will be controlled using arrow keys and it will be able to fire using the spacebar.  There will also be a button to pause (or hit enter). Lives and score will be on the top left and right hand corners, respectively.  
+This game will have a start menu where players will be able to view instructions and start the game play pressing "play".  Once the game has started, the space ship will be controlled using arrow keys and it will be able to fire using the spacebar.  There will also be a button to pause (or hit enter). Lives and score will be on the top left and right hand corners, respectively.
+
+![wireframes](https://raw.github.com/BrianChen/Space-Invaders/master/game.png) 
+![wireframes](https://raw.github.com/BrianChen/Space-Invaders/master/start-menu.png)  
+
 
 ### Architecture and Technologies
 
