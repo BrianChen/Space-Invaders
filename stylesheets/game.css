@@ -1,0 +1,15 @@
+#canvas {
+  background-color: #000;
+  display: block;
+  position: absolute;
+  margin: auto;
+  width: 60%;
+  height: 80%;
+  left: 20%;
+  top: 10%;
+}
+
+h1 {
+  color: yellow;
+  text-align: center;
+}
