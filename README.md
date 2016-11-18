@@ -9,7 +9,6 @@ Space Invaders is a Japanese shooting video game released in 1978 by Taito. It b
 In this Space Invaders game, players can:
 
 - [ ] Start and pause the game
-- [ ] Toggle the music on and off
 - [ ] Play through multiple levels with increased difficulty
 
 The game will also contain:
@@ -21,7 +20,7 @@ The game will also contain:
 
 This game will have a start menu where players will be able to view instructions and start the game play pressing "play".  Once the game has started, the space ship will be controlled using arrow keys and it will be able to fire using the spacebar.  There will also be a button to pause (or hit enter). Lives and score will be on the top left and right hand corners, respectively.
 
-![wireframes](https://raw.github.com/BrianChen/Space-Invaders/master/game.png) 
+![wireframes](https://raw.github.com/BrianChen/Space-Invaders/master/game.png)
 ![wireframes](https://raw.github.com/BrianChen/Space-Invaders/master/start-menu.png)  
 
 
@@ -30,7 +29,7 @@ This game will have a start menu where players will be able to view instructions
 This project will be implemented with the following technologies:
 
 - Vanilla JavaScript and `jquery` for overall structure and game logic,
-- `Processing.js` with `HTML5 Canvas` for DOM manipulation and rendering,
+- `Easel.js` with `HTML5 Canvas` for DOM manipulation and rendering,
 - Webpack to bundle and serve up the various scripts.
 
 In addition to the webpack entry file, there will be three scripts involved in this project:
@@ -39,15 +38,15 @@ In addition to the webpack entry file, there will be three scripts involved in t
 
 `game.js`: this script will keep track of the game state such as lives and score.  It will end the game when the player runs out of lives and display a game over.
 
-'alien.js': this script will be used to handle the amount of the aliens and the speed they travel at.  
+`alien.js`: this script will be used to handle the amount of the aliens and the speed they travel at.  
 
 
 ### Implementation Timeline
 
-**Day 1**: Setup all necessary Node modules, including getting webpack up and running and `Processing.js` installed.  Create `webpack.config.js` as well as `package.json`.  Write a basic entry file and the bare bones of all 3 scripts outlined above.  Learn the basics of `Processing.js`.  Goals for the day:
+**Day 1**: Setup all necessary Node modules, including getting webpack up and running and `Easel.js` installed.  Create `webpack.config.js` as well as `package.json`.  Write a basic entry file and the bare bones of all 3 scripts outlined above.  Learn the basics of `Easel.js`.  Goals for the day:
 
 - Get ships and aliens to render on the canvas.
-- Learn more about Processing.js
+- Learn more about Easel.js
 
 **Day 2**: Implement user interaction by key presses.  Allow users to move spaceship and move around at a certain speed.  Also create bullets that fire from the coordinate of the spaceship.  Goals for the day:
 
