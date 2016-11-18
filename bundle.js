@@ -432,10 +432,10 @@
 	          deleteBulletIndexs.push(i);
 	        }
 	      }
-	      // for (let i = 0; i < deleteBulletIndexs.length; i++){
-	      //   alien.bullets.splice(i,1);
-	      //   stage.removeChild(bullets[i]);
-	      // }
+	      for (var j = 0; j < deleteBulletIndexs.length; j++) {
+	        alien.bullets.splice(j, 1);
+	        stage.removeChild(bullets[j]);
+	      }
 	    }
 	  }, {
 	    key: 'checkHits',
@@ -538,7 +538,6 @@
 	  if (newLives === 0) {
 	    //game over
 	  } else {
-	    debugger;
 	    $('.lives').html(newLives.toString());
 	  }
 	};
