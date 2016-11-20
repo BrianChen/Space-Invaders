@@ -104,30 +104,46 @@
 	  _createClass(SpaceInvaders, [{
 	    key: 'init',
 	    value: function init() {
-	      var _this = this;
+	      var welcomeText = new createjs.Text("Welcome", "20px Arial", "#ff7700");
+	      welcomeText.textBaseline = "top";
+	      welcomeText.x = canvas.width / 2 - 50;
+	      welcomeText.y = canvas.height / 2 - 20;
 	
-	      (0, _background2.default)(this.stage);
-	      $('.play-button').click(function () {
-	        $('.start-menu').hide();
-	        $('.pause-button').click(function () {
-	          return _this.togglePause();
-	        });
-	        _this.play();
-	      });
+	      var playButton = new createjs.Text("Play", "20px Arial", "green");
+	      playButton.x = canvas.width / 2 - 40;
+	      playButton.y = canvas.height / 2 + 20;
+	      playButton.addEventListener("click", this.play.bind(this));
+	
+	      // domElement.htmlElement.onclick = function() {
+	      //   debugger;
+	      // }
+	
+	      this.stage.addChild(welcomeText, playButton);
+	      this.stage.update();
+	      // $('.play-button').click(() => {
+	      //   $('.start-menu').hide();
+	      //   $('.pause-button').click(() => this.togglePause());
+	      //   this.play();
+	      // });
+	    }
+	  }, {
+	    key: 'handleClick',
+	    value: function handleClick() {
+	      this.play();
 	    }
 	  }, {
 	    key: 'play',
 	    value: function play() {
-	      var _this2 = this;
+	      var _this = this;
 	
-	      // stage.removeChild(1,2)
+	      this.stage.removeAllChildren();
 	      this.spaceship = new _spaceship2.default(this.stage, this.canvas);
 	      this.alien = new _alien2.default(this.stage, this.canvas);
 	      this.alien.draw(4);
 	      this.spaceship.draw();
 	      createjs.Ticker.setFPS(40);
 	      createjs.Ticker.on("tick", function () {
-	        return _this2.handleTick();
+	        return _this.handleTick();
 	      });
 	      document.addEventListener("keydown", this.keyDown.bind(this));
 	      document.addEventListener("keyup", this.keyUp.bind(this));
@@ -139,7 +155,7 @@
 	        this.alien.moveAliens();
 	        _bullet2.default.moveBullets(this.stage, this.spaceship);
 	        _bullet2.default.moveAlienBullets(this.stage, this.alien);
-	        _bullet2.default.checkHits(this.stage, this.spaceship);
+	        _bullet2.default.checkHits(this.stage, this.spaceship, this.alien);
 	        _bullet2.default.checkIfDamaged(this.stage, this.alien);
 	        var randomNum = Math.floor(Math.random() * 50) + 1;
 	        if (randomNum == 5) {
@@ -439,22 +455,23 @@
 	    }
 	  }, {
 	    key: 'checkHits',
-	    value: function checkHits(stage, spaceship) {
+	    value: function checkHits(stage, spaceship, alien) {
 	      var alienContainer = stage.getChildByName('alienContainer');
 	      var bullets = spaceship.bullets;
 	      if (alienContainer && bullets.length > 0) {
 	        var aliens = alienContainer.children;
 	        if (aliens.length == 0) {
-	          // newWave();
+	          stage.removeChild(alien.aliens);
+	          alien.draw(4);
 	        } else {
 	          for (var i = 0; i < bullets.length; i++) {
 	            for (var j = 0; j < aliens.length; j++) {
 	              var bullet = bullets[i];
-	              var alien = aliens[j];
-	              if (bullet.y <= alien.localToGlobal(0, 0).y + alien.height && bullet.x <= alien.localToGlobal(0, 0).x + alien.width && bullet.x >= alien.localToGlobal(0, 0).x) {
+	              var _alien = aliens[j];
+	              if (bullet.y <= _alien.localToGlobal(0, 0).y + _alien.height && bullet.x <= _alien.localToGlobal(0, 0).x + _alien.width && bullet.x >= _alien.localToGlobal(0, 0).x) {
 	                (0, _helper.incrementScore)();
 	                spaceship.bullets.splice(i, 1);
-	                alienContainer.removeChild(alien);
+	                alienContainer.removeChild(_alien);
 	                stage.removeChild(bullet);
 	              }
 	            }
@@ -471,7 +488,7 @@
 	        for (var i = 0; i < bullets.length; i++) {
 	          if (bullets[i].y + bullets[i].height >= spaceship.y && bullets[i].x <= spaceship.x + spaceship.width && bullets[i].x + bullets[i].width >= spaceship.x) {
 	            //hit
-	            (0, _helper.updateLives)();
+	            (0, _helper.updateLives)(stage);
 	            alien.bullets.splice(i, 1);
 	            stage.removeChild(bullets[i]);
 	            spaceship.x = canvas.width / 2 - 15;
@@ -532,18 +549,27 @@
 	
 	var gotHit = function gotHit() {};
 	
-	var updateLives = function updateLives() {
+	var updateLives = function updateLives(stage) {
 	  var lives = $('.lives').html();
 	  var newLives = parseInt(lives) - 1;
 	  if (newLives === 0) {
-	    //game over
+	    $('.lives').html(newLives.toString());
+	    stage.removeAllChildren();
+	    var text = new createjs.Text("Game Over", "20px Arial", "#ff7700");
+	    text.x = canvas.width / 2 - 50;
+	    text.y = canvas.height / 2 - 20;
+	    stage.addChild(text);
+	    stage.update();
 	  } else {
 	    $('.lives').html(newLives.toString());
 	  }
 	};
 	
+	var gameOver = function gameOver() {};
+	
 	exports.incrementScore = incrementScore;
 	exports.updateLives = updateLives;
+	exports.gameOver = gameOver;
 
 /***/ }
 /******/ ]);
