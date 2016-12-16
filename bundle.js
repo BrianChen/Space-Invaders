@@ -74,15 +74,15 @@
 	
 	var _spaceship2 = _interopRequireDefault(_spaceship);
 	
-	var _alien = __webpack_require__(3);
+	var _alien = __webpack_require__(5);
 	
 	var _alien2 = _interopRequireDefault(_alien);
 	
-	var _bullet = __webpack_require__(4);
+	var _bullet = __webpack_require__(3);
 	
 	var _bullet2 = _interopRequireDefault(_bullet);
 	
-	var _background = __webpack_require__(5);
+	var _background = __webpack_require__(6);
 	
 	var _background2 = _interopRequireDefault(_background);
 	
@@ -95,21 +95,21 @@
 	    _classCallCheck(this, SpaceInvaders);
 	
 	    this.stage = stage;
-	    this.canvas = this.canvas;
-	
+	    this.canvas = canvas;
 	    this.pressedKeys = {};
+	
 	    this.init();
 	  }
 	
 	  _createClass(SpaceInvaders, [{
 	    key: 'init',
 	    value: function init() {
-	      var welcomeText = new createjs.Text("Welcome", "20px Arial", "#ff7700");
+	      var welcomeText = new createjs.Text("Welcome", "20px monospace", "#ff7700");
 	      welcomeText.textBaseline = "top";
 	      welcomeText.x = canvas.width / 2 - 50;
 	      welcomeText.y = canvas.height / 2 - 20;
 	
-	      var playButton = new createjs.Text("Play", "20px Arial", "green");
+	      var playButton = new createjs.Text("Play", "20px monospace", "green");
 	      playButton.x = canvas.width / 2 - 40;
 	      playButton.y = canvas.height / 2 + 20;
 	      playButton.addEventListener("click", this.play.bind(this));
@@ -216,7 +216,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _bullet = __webpack_require__(4);
+	var _bullet = __webpack_require__(3);
 	
 	var _bullet2 = _interopRequireDefault(_bullet);
 	
@@ -300,94 +300,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _bullet = __webpack_require__(4);
-	
-	var _bullet2 = _interopRequireDefault(_bullet);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Alien = function () {
-	  function Alien(stage) {
-	    _classCallCheck(this, Alien);
-	
-	    this.stage = stage;
-	    this.right = true;
-	    this.bullets = [];
-	  }
-	
-	  _createClass(Alien, [{
-	    key: 'draw',
-	    value: function draw(rows) {
-	      this.aliens = new createjs.Container();
-	      this.aliens.name = "alienContainer";
-	
-	      for (var i = 0; i < rows; i++) {
-	        for (var j = 0; j < 8; j++) {
-	          var x = j * 20;
-	          var y = i * 10;
-	          var img = new Image();
-	          img.src = 'assets/alien.png';
-	          var bitmap = new createjs.Bitmap('assets/alien.png');
-	          bitmap.x = x;
-	          bitmap.y = y;
-	          bitmap.width = 30;
-	          bitmap.height = 5;
-	          this.aliens.addChild(bitmap);
-	        }
-	      }
-	      this.aliens.x = canvas.width / 2 - 80;
-	      this.stage.addChild(this.aliens);
-	      this.stage.update();
-	    }
-	  }, {
-	    key: 'moveAliens',
-	    value: function moveAliens() {
-	      if (this.right) {
-	        if (this.aliens.x + 160 > canvas.width - 30) {
-	          this.right = !this.right;
-	          this.aliens.y += 5;
-	        } else {
-	          this.aliens.x += 1;
-	        }
-	      } else {
-	        if (this.aliens.x < 20) {
-	          this.right = !this.right;
-	          this.aliens.y += 5;
-	        } else {
-	          this.aliens.x -= 1;
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'fireAlienBullets',
-	    value: function fireAlienBullets() {
-	      var bullet = _bullet2.default.drawAlienBullet(this.stage);
-	      this.bullets.push(bullet);
-	      this.stage.addChild(bullet);
-	      this.stage.update();
-	    }
-	  }]);
-	
-	  return Alien;
-	}();
-	
-	exports.default = Alien;
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _helper = __webpack_require__(6);
+	var _helper = __webpack_require__(4);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -505,31 +418,7 @@
 	exports.default = Bullet;
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var Background = function Background(stage) {
-	  var img = new Image();
-	  img.src = "assets/starsbackground.jpg";
-	  img.onload = function () {
-	    var bitmap = new createjs.Bitmap(img);
-	    bitmap.x = 0;
-	    bitmap.y = 0;
-	    bitmap.name = "background";
-	    stage.addChild(bitmap);
-	    stage.update();
-	  };
-	};
-	
-	exports.default = Background;
-
-/***/ },
-/* 6 */
+/* 4 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -570,6 +459,117 @@
 	exports.incrementScore = incrementScore;
 	exports.updateLives = updateLives;
 	exports.gameOver = gameOver;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _bullet = __webpack_require__(3);
+	
+	var _bullet2 = _interopRequireDefault(_bullet);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Alien = function () {
+	  function Alien(stage) {
+	    _classCallCheck(this, Alien);
+	
+	    this.stage = stage;
+	    this.right = true;
+	    this.bullets = [];
+	  }
+	
+	  _createClass(Alien, [{
+	    key: 'draw',
+	    value: function draw(rows) {
+	      this.aliens = new createjs.Container();
+	      this.aliens.name = "alienContainer";
+	
+	      for (var i = 0; i < rows; i++) {
+	        for (var j = 0; j < 8; j++) {
+	          var x = j * 20;
+	          var y = i * 10;
+	          var img = new Image();
+	          img.src = 'assets/alien.png';
+	          var bitmap = new createjs.Bitmap('assets/alien.png');
+	          bitmap.x = x;
+	          bitmap.y = y;
+	          bitmap.width = 30;
+	          bitmap.height = 5;
+	          this.aliens.addChild(bitmap);
+	        }
+	      }
+	      this.aliens.x = canvas.width / 2 - 80;
+	      this.stage.addChild(this.aliens);
+	      this.stage.update();
+	    }
+	  }, {
+	    key: 'moveAliens',
+	    value: function moveAliens() {
+	      if (this.right) {
+	        if (this.aliens.x + 160 > canvas.width - 30) {
+	          this.right = !this.right;
+	          this.aliens.y += 5;
+	        } else {
+	          this.aliens.x += 1;
+	        }
+	      } else {
+	        if (this.aliens.x < 20) {
+	          this.right = !this.right;
+	          this.aliens.y += 5;
+	        } else {
+	          this.aliens.x -= 1;
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'fireAlienBullets',
+	    value: function fireAlienBullets() {
+	      var bullet = _bullet2.default.drawAlienBullet(this.stage);
+	      this.bullets.push(bullet);
+	      this.stage.addChild(bullet);
+	      this.stage.update();
+	    }
+	  }]);
+	
+	  return Alien;
+	}();
+	
+	exports.default = Alien;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var Background = function Background(stage) {
+	  var img = new Image();
+	  img.src = "assets/starsbackground.jpg";
+	  img.onload = function () {
+	    var bitmap = new createjs.Bitmap(img);
+	    bitmap.x = 0;
+	    bitmap.y = 0;
+	    bitmap.name = "background";
+	    stage.addChild(bitmap);
+	    stage.update();
+	  };
+	};
+	
+	exports.default = Background;
 
 /***/ }
 /******/ ]);
