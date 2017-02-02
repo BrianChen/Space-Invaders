@@ -46,7 +46,7 @@
 
 	'use strict';
 	
-	var _space_invaders_game = __webpack_require__(7);
+	var _space_invaders_game = __webpack_require__(1);
 	
 	var _space_invaders_game2 = _interopRequireDefault(_space_invaders_game);
 	
@@ -59,7 +59,152 @@
 	});
 
 /***/ },
-/* 1 */,
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _spaceship = __webpack_require__(2);
+	
+	var _spaceship2 = _interopRequireDefault(_spaceship);
+	
+	var _alien = __webpack_require__(5);
+	
+	var _alien2 = _interopRequireDefault(_alien);
+	
+	var _bullet = __webpack_require__(3);
+	
+	var _bullet2 = _interopRequireDefault(_bullet);
+	
+	var _background = __webpack_require__(6);
+	
+	var _background2 = _interopRequireDefault(_background);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var SpaceInvadersGame = function () {
+	  function SpaceInvadersGame(stage, canvas) {
+	    _classCallCheck(this, SpaceInvadersGame);
+	
+	    this.stage = stage;
+	    this.canvas = canvas;
+	    this.pressedKeys = {};
+	
+	    this.init();
+	  }
+	
+	  _createClass(SpaceInvadersGame, [{
+	    key: 'init',
+	    value: function init() {
+	      var welcomeText = new createjs.Text("Welcome", "20px Sans-serif", "#ff7700");
+	      welcomeText.textBaseline = "top";
+	      welcomeText.x = canvas.width / 2 - 50;
+	      welcomeText.y = canvas.height / 2 - 20;
+	
+	      var playButton = new createjs.Text("Play", "20px monospace", "green");
+	      playButton.x = canvas.width / 2 - 40;
+	      playButton.y = canvas.height / 2 + 20;
+	      playButton.addEventListener("click", this.play.bind(this));
+	
+	      // domElement.htmlElement.onclick = function() {
+	      //   debugger;
+	      // }
+	
+	      this.stage.addChild(welcomeText, playButton);
+	      this.stage.update();
+	      // $('.play-button').click(() => {
+	      //   $('.start-menu').hide();
+	      //   $('.pause-button').click(() => this.togglePause());
+	      //   this.play();
+	      // });
+	    }
+	  }, {
+	    key: 'handleClick',
+	    value: function handleClick() {
+	      this.play();
+	    }
+	  }, {
+	    key: 'play',
+	    value: function play() {
+	      var _this = this;
+	
+	      this.stage.removeAllChildren();
+	      this.spaceship = new _spaceship2.default(this.stage, this.canvas);
+	      this.alien = new _alien2.default(this.stage, this.canvas);
+	      this.alien.draw(4);
+	      this.spaceship.draw();
+	      createjs.Ticker.setFPS(40);
+	      createjs.Ticker.on("tick", function () {
+	        return _this.handleTick();
+	      });
+	      document.addEventListener("keydown", this.keyDown.bind(this));
+	      document.addEventListener("keyup", this.keyUp.bind(this));
+	    }
+	  }, {
+	    key: 'handleTick',
+	    value: function handleTick() {
+	      if (!createjs.Ticker.getPaused()) {
+	        this.alien.moveAliens();
+	        _bullet2.default.moveBullets(this.stage, this.spaceship);
+	        _bullet2.default.moveAlienBullets(this.stage, this.alien);
+	        _bullet2.default.checkHits(this.stage, this.spaceship, this.alien);
+	        _bullet2.default.checkIfDamaged(this.stage, this.alien);
+	        var randomNum = Math.floor(Math.random() * 50) + 1;
+	        if (randomNum == 5) {
+	          this.alien.fireAlienBullets();
+	        }
+	        this.stage.update();
+	      }
+	    }
+	  }, {
+	    key: 'togglePause',
+	    value: function togglePause() {
+	      var paused = !createjs.Ticker.getPaused();
+	      createjs.Ticker.setPaused(paused);
+	      var pausedValue = paused ? "unpause" : "pause";
+	      $('.pause-button').attr('value', pausedValue);
+	    }
+	  }, {
+	    key: 'keyDown',
+	    value: function keyDown(e) {
+	      var keycode = e.which || window.event.keycode;
+	
+	      if (keycode == 37) {
+	        //left
+	        e.preventDefault();
+	        this.spaceship.move(keycode);
+	      } else if (keycode == 39) {
+	        //right
+	        e.preventDefault();
+	        this.spaceship.move(keycode);
+	      } else if (keycode == 32) {
+	        //spacebar
+	        e.preventDefault();
+	        this.spaceship.fire();
+	      }
+	    }
+	  }, {
+	    key: 'keyUp',
+	    value: function keyUp(e) {
+	      var keycode = e.which || window.event.keycode;
+	      this.spaceship;
+	    }
+	  }]);
+	
+	  return SpaceInvadersGame;
+	}();
+	
+	exports.default = SpaceInvadersGame;
+
+/***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -425,152 +570,6 @@
 	};
 	
 	exports.default = Background;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _spaceship = __webpack_require__(2);
-	
-	var _spaceship2 = _interopRequireDefault(_spaceship);
-	
-	var _alien = __webpack_require__(5);
-	
-	var _alien2 = _interopRequireDefault(_alien);
-	
-	var _bullet = __webpack_require__(3);
-	
-	var _bullet2 = _interopRequireDefault(_bullet);
-	
-	var _background = __webpack_require__(6);
-	
-	var _background2 = _interopRequireDefault(_background);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var SpaceInvadersGame = function () {
-	  function SpaceInvadersGame(stage, canvas) {
-	    _classCallCheck(this, SpaceInvadersGame);
-	
-	    this.stage = stage;
-	    this.canvas = canvas;
-	    this.pressedKeys = {};
-	
-	    this.init();
-	  }
-	
-	  _createClass(SpaceInvadersGame, [{
-	    key: 'init',
-	    value: function init() {
-	      var welcomeText = new createjs.Text("Welcome", "20px Sans-serif", "#ff7700");
-	      welcomeText.textBaseline = "top";
-	      welcomeText.x = canvas.width / 2 - 50;
-	      welcomeText.y = canvas.height / 2 - 20;
-	
-	      var playButton = new createjs.Text("Play", "20px monospace", "green");
-	      playButton.x = canvas.width / 2 - 40;
-	      playButton.y = canvas.height / 2 + 20;
-	      playButton.addEventListener("click", this.play.bind(this));
-	
-	      // domElement.htmlElement.onclick = function() {
-	      //   debugger;
-	      // }
-	
-	      this.stage.addChild(welcomeText, playButton);
-	      this.stage.update();
-	      // $('.play-button').click(() => {
-	      //   $('.start-menu').hide();
-	      //   $('.pause-button').click(() => this.togglePause());
-	      //   this.play();
-	      // });
-	    }
-	  }, {
-	    key: 'handleClick',
-	    value: function handleClick() {
-	      this.play();
-	    }
-	  }, {
-	    key: 'play',
-	    value: function play() {
-	      var _this = this;
-	
-	      this.stage.removeAllChildren();
-	      this.spaceship = new _spaceship2.default(this.stage, this.canvas);
-	      this.alien = new _alien2.default(this.stage, this.canvas);
-	      this.alien.draw(4);
-	      this.spaceship.draw();
-	      createjs.Ticker.setFPS(40);
-	      createjs.Ticker.on("tick", function () {
-	        return _this.handleTick();
-	      });
-	      document.addEventListener("keydown", this.keyDown.bind(this));
-	      document.addEventListener("keyup", this.keyUp.bind(this));
-	    }
-	  }, {
-	    key: 'handleTick',
-	    value: function handleTick() {
-	      if (!createjs.Ticker.getPaused()) {
-	        this.alien.moveAliens();
-	        _bullet2.default.moveBullets(this.stage, this.spaceship);
-	        _bullet2.default.moveAlienBullets(this.stage, this.alien);
-	        _bullet2.default.checkHits(this.stage, this.spaceship, this.alien);
-	        _bullet2.default.checkIfDamaged(this.stage, this.alien);
-	        var randomNum = Math.floor(Math.random() * 50) + 1;
-	        if (randomNum == 5) {
-	          this.alien.fireAlienBullets();
-	        }
-	        this.stage.update();
-	      }
-	    }
-	  }, {
-	    key: 'togglePause',
-	    value: function togglePause() {
-	      var paused = !createjs.Ticker.getPaused();
-	      createjs.Ticker.setPaused(paused);
-	      var pausedValue = paused ? "unpause" : "pause";
-	      $('.pause-button').attr('value', pausedValue);
-	    }
-	  }, {
-	    key: 'keyDown',
-	    value: function keyDown(e) {
-	      var keycode = e.which || window.event.keycode;
-	
-	      if (keycode == 37) {
-	        //left
-	        e.preventDefault();
-	        this.spaceship.move(keycode);
-	      } else if (keycode == 39) {
-	        //right
-	        e.preventDefault();
-	        this.spaceship.move(keycode);
-	      } else if (keycode == 32) {
-	        //spacebar
-	        e.preventDefault();
-	        this.spaceship.fire();
-	      }
-	    }
-	  }, {
-	    key: 'keyUp',
-	    value: function keyUp(e) {
-	      var keycode = e.which || window.event.keycode;
-	      this.spaceship;
-	    }
-	  }]);
-	
-	  return SpaceInvadersGame;
-	}();
-	
-	exports.default = SpaceInvadersGame;
 
 /***/ }
 /******/ ]);
