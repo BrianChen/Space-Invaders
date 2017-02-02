@@ -1,4 +1,16 @@
-#canvas {
+h1 {
+  color: yellow;
+  text-align: center;
+}
+
+span {
+  color: white;
+}
+
+p {
+  color: white;
+}
+/*#canvas {
   background-color: #000;
   display: none;
   position: absolute;
@@ -9,7 +21,7 @@
   top: 10%;
   min-width: 400px;
   min-height: 300px;
-}
+}*/
 
 body {
   background: url(../assets/images/outter-background.png) no-repeat center center fixed;
@@ -27,10 +39,13 @@ body {
   position: absolute;
   background-color: #000;
   margin: auto;
-  width: 60%;
-  height: 80%;
-  left: 20%;
-  top: 10%;
+  width: 630px;
+  height: 600px;
+  margin:auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 
 .welcome-title {
@@ -47,25 +62,29 @@ body {
   align-items: center;
 }
 
-.welcome-title span:first-child {
-  font-size: 4vw;
-  color: yellow;
+.welcome-middle {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.welcome-title span:nth-child(2) {
-  font-size: 3vw;
+.welcome-aliens {
+  background: url(../assets/images/welcome-aliens.png);
+  background-size: cover;
+  height: 50px;
+  width: 300px;
+}
+
+.welcome-middle span {
+  padding-top: 60px;
+  font-size: 2vw;
+}
+
+.welcome-footer{
   font-style: italic;
+  padding-top: 110px;
 }
 
-h1 {
-  color: yellow;
-  text-align: center;
-}
-
-span {
-  color: white;
-}
-
-p {
-  color: white;
+.welcome-footer span {
+  color: grey;
 }
