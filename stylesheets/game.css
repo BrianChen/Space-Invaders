@@ -10,18 +10,6 @@ span {
 p {
   color: white;
 }
-/*#canvas {
-  background-color: #000;
-  display: none;
-  position: absolute;
-  margin: auto;
-  width: 60%;
-  height: 80%;
-  left: 20%;
-  top: 10%;
-  min-width: 400px;
-  min-height: 300px;
-}*/
 
 body {
   background: url(../assets/images/outter-background.png) no-repeat center center fixed;
@@ -31,11 +19,24 @@ body {
   background-size: cover;
 }
 
+#canvas {
+  background-color: #000;
+  display: none;
+  position: absolute;
+  margin: auto;
+  width: 630px;
+  height: 600px;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
 .welcome-screen {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 10000;
   position: absolute;
   background-color: #000;
   margin: auto;
@@ -75,9 +76,14 @@ body {
   width: 300px;
 }
 
-.welcome-middle span {
+.play-btn {
   padding-top: 60px;
   font-size: 2vw;
+}
+
+.play-btn:hover {
+  color: yellow;
+  cursor: pointer;
 }
 
 .welcome-footer{

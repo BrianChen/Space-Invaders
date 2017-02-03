@@ -54,7 +54,7 @@
 	
 	document.addEventListener('DOMContentLoaded', function () {
 	  var canvas = document.getElementById('canvas');
-	  var stage = new createjs.Stage('canvas');
+	  var stage = new createjs.Stage(canvas);
 	  new _space_invaders_game2.default(stage, canvas);
 	});
 
@@ -98,55 +98,40 @@
 	    this.canvas = canvas;
 	    this.pressedKeys = {};
 	
+	    this.play = this.play.bind(this);
 	    this.init();
 	  }
 	
 	  _createClass(SpaceInvadersGame, [{
 	    key: 'init',
 	    value: function init() {
-	      var welcomeText = new createjs.Text("Welcome", "20px Sans-serif", "#ff7700");
-	      welcomeText.textBaseline = "top";
-	      welcomeText.x = canvas.width / 2 - 50;
-	      welcomeText.y = canvas.height / 2 - 20;
+	      var _this = this;
 	
-	      var playButton = new createjs.Text("Play", "20px monospace", "green");
-	      playButton.x = canvas.width / 2 - 40;
-	      playButton.y = canvas.height / 2 + 20;
-	      playButton.addEventListener("click", this.play.bind(this));
-	
-	      // domElement.htmlElement.onclick = function() {
-	      //   debugger;
-	      // }
-	
-	      this.stage.addChild(welcomeText, playButton);
-	      this.stage.update();
-	      // $('.play-button').click(() => {
-	      //   $('.start-menu').hide();
-	      //   $('.pause-button').click(() => this.togglePause());
-	      //   this.play();
-	      // });
+	      $('.play-btn').click(function () {
+	        $('.welcome-screen').hide(), $('#canvas').show();
+	        _this.play();
+	      });
 	    }
-	  }, {
-	    key: 'handleClick',
-	    value: function handleClick() {
-	      this.play();
-	    }
+	
+	    // play() {
+	    //   this.stage.removeAllChildren();
+	    //   this.spaceship = new Spaceship(this.stage, this.canvas);
+	    //   this.alien = new Alien(this.stage, this.canvas);
+	    //   this.alien.draw(4);
+	    //   this.spaceship.draw();
+	    //   createjs.Ticker.setFPS(40);
+	    //   createjs.Ticker.on("tick", () => this.handleTick());
+	    //   document.addEventListener("keydown", this.keyDown.bind(this));
+	    //   document.addEventListener("keyup", this.keyUp.bind(this));
+	    // }
+	
 	  }, {
 	    key: 'play',
 	    value: function play() {
-	      var _this = this;
-	
 	      this.stage.removeAllChildren();
-	      this.spaceship = new _spaceship2.default(this.stage, this.canvas);
-	      this.alien = new _alien2.default(this.stage, this.canvas);
-	      this.alien.draw(4);
+	      this.spaceship = new _spaceship2.default(this.stage);
+	      this.alien = new _alien2.default(this.stage);
 	      this.spaceship.draw();
-	      createjs.Ticker.setFPS(40);
-	      createjs.Ticker.on("tick", function () {
-	        return _this.handleTick();
-	      });
-	      document.addEventListener("keydown", this.keyDown.bind(this));
-	      document.addEventListener("keyup", this.keyUp.bind(this));
 	    }
 	  }, {
 	    key: 'handleTick',
@@ -229,8 +214,6 @@
 	    _classCallCheck(this, Spaceship);
 	
 	    this.stage = stage;
-	    this.x = canvas.width / 2 - 15;
-	    this.y = canvas.height - 30;
 	    this.bullets = [];
 	  }
 	
@@ -240,11 +223,11 @@
 	      var _this = this;
 	
 	      var img = new Image();
-	      img.src = 'assets/spaceship.png';
+	      img.src = 'assets/images/spaceship.png';
 	      var x = this.x;
 	      var y = this.y;
 	      img.onload = function (event) {
-	        var bitmap = new createjs.Bitmap('assets/spaceship.png');
+	        var bitmap = new createjs.Bitmap('assets/images/spaceship.png');
 	        bitmap.x = x;
 	        bitmap.y = y;
 	        bitmap.height = 20;
@@ -501,7 +484,7 @@
 	          var y = i * 10;
 	          var img = new Image();
 	          img.src = 'assets/alien.png';
-	          var bitmap = new createjs.Bitmap('assets/alien.png');
+	          var bitmap = new createjs.Bitmap('assets/images/alien.png');
 	          bitmap.x = x;
 	          bitmap.y = y;
 	          bitmap.width = 30;
