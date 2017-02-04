@@ -55,6 +55,8 @@
 	document.addEventListener('DOMContentLoaded', function () {
 	  var canvas = document.getElementById('canvas');
 	  var stage = new createjs.Stage(canvas);
+	  window.stage = stage;
+	  window.canvas = canvas;
 	  new _space_invaders_game2.default(stage, canvas);
 	});
 
@@ -82,10 +84,6 @@
 	
 	var _bullet2 = _interopRequireDefault(_bullet);
 	
-	var _background = __webpack_require__(6);
-	
-	var _background2 = _interopRequireDefault(_background);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -99,6 +97,7 @@
 	    this.pressedKeys = {};
 	
 	    this.play = this.play.bind(this);
+	    this.setHeader = this.setHeader.bind(this);
 	    this.init();
 	  }
 	
@@ -109,37 +108,45 @@
 	
 	      $('.play-btn').click(function () {
 	        $('.welcome-screen').hide(), $('#canvas').show();
+	        _this.setHeader();
 	        _this.play();
 	      });
 	    }
+	  }, {
+	    key: 'setHeader',
+	    value: function setHeader() {
+	      var _this2 = this;
 	
-	    // play() {
-	    //   this.stage.removeAllChildren();
-	    //   this.spaceship = new Spaceship(this.stage, this.canvas);
-	    //   this.alien = new Alien(this.stage, this.canvas);
-	    //   this.alien.draw(4);
-	    //   this.spaceship.draw();
-	    //   createjs.Ticker.setFPS(40);
-	    //   createjs.Ticker.on("tick", () => this.handleTick());
-	    //   document.addEventListener("keydown", this.keyDown.bind(this));
-	    //   document.addEventListener("keyup", this.keyUp.bind(this));
-	    // }
-	
+	      var pauseImg = new Image();
+	      pauseImg.src = 'assets/images/pause-icon.png';
+	      pauseImg.onload = function () {
+	        var pauseBM = new createjs.Bitmap(pauseImg);
+	        pauseBM.addEventListener('click', _this2.togglePause);
+	        pauseBM.x = canvas.width - pauseBM.image.width - 40;
+	        pauseBM.y = 20;
+	        _this2.stage.addChild(pauseBM);
+	        _this2.stage.update();
+	      };
+	    }
 	  }, {
 	    key: 'play',
 	    value: function play() {
 	      this.stage.removeAllChildren();
 	      this.spaceship = new _spaceship2.default(this.stage);
-	      this.alien = new _alien2.default(this.stage);
+	      // this.aliens = new Alien(this.stage);
+	      // this.aliens.draw(5);
 	      this.spaceship.draw();
+	      // createjs.Ticker.setFPS(40);
+	      // createjs.Ticker.on("tick", () => this.handleTick());
+	      document.addEventListener("keydown", this.keyDown.bind(this));
 	    }
 	  }, {
 	    key: 'handleTick',
 	    value: function handleTick() {
 	      if (!createjs.Ticker.getPaused()) {
-	        this.alien.moveAliens();
-	        _bullet2.default.moveBullets(this.stage, this.spaceship);
-	        _bullet2.default.moveAlienBullets(this.stage, this.alien);
+	        // this.alien.moveAliens();
+	        // Bullet.moveBullets(this.stage, this.spaceship);
+	        // Bullet.moveAlienBullets(this.stage, this.alien);
 	        _bullet2.default.checkHits(this.stage, this.spaceship, this.alien);
 	        _bullet2.default.checkIfDamaged(this.stage, this.alien);
 	        var randomNum = Math.floor(Math.random() * 50) + 1;
@@ -152,36 +159,43 @@
 	  }, {
 	    key: 'togglePause',
 	    value: function togglePause() {
-	      var paused = !createjs.Ticker.getPaused();
-	      createjs.Ticker.setPaused(paused);
-	      var pausedValue = paused ? "unpause" : "pause";
-	      $('.pause-button').attr('value', pausedValue);
+	      var isPaused = !createjs.Ticker.getPaused();
+	      createjs.Ticker.setPaused(isPaused);
+	      if (isPaused) {
+	        $('.fa-play').hide();
+	        $('.fa-pause').show();
+	      } else {
+	        $('.fa-pause').hide();
+	        $('.fa-play').show();
+	      }
 	    }
 	  }, {
 	    key: 'keyDown',
 	    value: function keyDown(e) {
 	      var keycode = e.which || window.event.keycode;
 	
-	      if (keycode == 37) {
-	        //left
-	        e.preventDefault();
-	        this.spaceship.move(keycode);
-	      } else if (keycode == 39) {
-	        //right
-	        e.preventDefault();
-	        this.spaceship.move(keycode);
-	      } else if (keycode == 32) {
-	        //spacebar
-	        e.preventDefault();
-	        this.spaceship.fire();
+	      if (!createjs.Ticker.getPaused()) {
+	        if (keycode == 37) {
+	          //left
+	          e.preventDefault();
+	          this.spaceship.move(keycode);
+	        } else if (keycode == 39) {
+	          //right
+	          e.preventDefault();
+	          this.spaceship.move(keycode);
+	        } else if (keycode == 32) {
+	          //spacebar
+	          e.preventDefault();
+	          this.spaceship.fire();
+	        }
 	      }
 	    }
-	  }, {
-	    key: 'keyUp',
-	    value: function keyUp(e) {
-	      var keycode = e.which || window.event.keycode;
-	      this.spaceship;
-	    }
+	
+	    // keyUp(e) {
+	    //   let keycode = e.which || window.event.keycode;
+	    //   this.spaceship
+	    // }
+	
 	  }]);
 	
 	  return SpaceInvadersGame;
@@ -193,7 +207,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -218,52 +232,49 @@
 	  }
 	
 	  _createClass(Spaceship, [{
-	    key: 'draw',
+	    key: "draw",
 	    value: function draw() {
 	      var _this = this;
 	
 	      var img = new Image();
-	      img.src = 'assets/images/spaceship.png';
-	      var x = this.x;
-	      var y = this.y;
-	      img.onload = function (event) {
-	        var bitmap = new createjs.Bitmap('assets/images/spaceship.png');
-	        bitmap.x = x;
-	        bitmap.y = y;
-	        bitmap.height = 20;
-	        bitmap.width = 20;
+	      img.src = "assets/images/spaceship.png";
+	      img.onload = function () {
+	        var bitmap = new createjs.Bitmap(img);
+	        bitmap.x = canvas.width / 2 - bitmap.image.width / 2;
+	        bitmap.y = canvas.height - bitmap.image.height - 20;
 	        bitmap.name = "spaceship";
 	        _this.stage.addChild(bitmap);
 	        _this.stage.update();
 	      };
 	    }
 	  }, {
-	    key: 'move',
+	    key: "move",
 	    value: function move(keycode) {
 	      var spaceship = this.stage.getChildByName("spaceship");
+	
 	      if (keycode == 37) {
 	        //left 37
 	        if (spaceship.x > 40) {
-	          spaceship.x -= 10;
+	          spaceship.x -= 20;
 	          this.x = spaceship.x;
 	        }
 	      } else if (keycode == 39) {
 	        //right 39
-	        if (spaceship.x + 30 < canvas.width - 40) {
-	          spaceship.x += 10;
+	        if (spaceship.x < canvas.width - spaceship.image.width - 40) {
+	          spaceship.x += 20;
 	          this.x = spaceship.x;
 	        }
 	      }
 	      this.stage.update();
 	    }
-	  }, {
-	    key: 'fire',
-	    value: function fire() {
-	      var bullet = _bullet2.default.drawSpaceshipBullet(this.x, this.y);
-	      this.bullets.push(bullet);
-	      this.stage.addChild(bullet);
-	      this.stage.update();
-	    }
+	    //
+	    //   fire() {
+	    //     let bullet = Bullet.drawSpaceshipBullet(this.x, this.y)
+	    //     this.bullets.push(bullet);
+	    //     this.stage.addChild(bullet);
+	    //     this.stage.update();
+	    //   }
+	
 	  }]);
 	
 	  return Spaceship;
@@ -479,7 +490,7 @@
 	      this.aliens.name = "alienContainer";
 	
 	      for (var i = 0; i < rows; i++) {
-	        for (var j = 0; j < 8; j++) {
+	        for (var j = 0; j < 11; j++) {
 	          var x = j * 20;
 	          var y = i * 10;
 	          var img = new Image();
@@ -529,30 +540,6 @@
 	}();
 	
 	exports.default = Alien;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var Background = function Background(stage) {
-	  var img = new Image();
-	  img.src = "assets/starsbackground.jpg";
-	  img.onload = function () {
-	    var bitmap = new createjs.Bitmap(img);
-	    bitmap.x = 0;
-	    bitmap.y = 0;
-	    bitmap.name = "background";
-	    stage.addChild(bitmap);
-	    stage.update();
-	  };
-	};
-	
-	exports.default = Background;
 
 /***/ }
 /******/ ]);

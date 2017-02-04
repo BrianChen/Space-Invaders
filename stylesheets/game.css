@@ -94,3 +94,18 @@ body {
 .welcome-footer span {
   color: grey;
 }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.fa {
+  color: white;
+  position: absolute;
+  z-index: 99;
+}
+
+#play {
+  display: none;
+}

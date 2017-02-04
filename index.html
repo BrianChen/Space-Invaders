@@ -7,6 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
     <script src="./bundle.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   </head>
   <body>
     <main class="welcome-screen">
@@ -20,6 +21,16 @@
         <span>© 2017 Brian Chen</span>
       </div>
     </main>
-    <canvas id="canvas"></canvas>
+    <canvas id="canvas" width="1260" height="1200">
+      <div class="header">
+        <div>
+          <span class="score">Score: </span>
+          <span class="score-num"> 0 </span>
+        </div>
+        <i id="pause" class="fa fa-pause"></i>
+        <i id="play" class="fa fa-play"></i>
+      </div>
+
+    </canvas>
   </body>
 </html>
