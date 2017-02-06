@@ -112,22 +112,20 @@
 	        _this.play();
 	      });
 	    }
-	  }, {
-	    key: 'setHeader',
-	    value: function setHeader() {
-	      var _this2 = this;
 	
-	      var pauseImg = new Image();
-	      pauseImg.src = 'assets/images/pause-icon.png';
-	      pauseImg.onload = function () {
-	        var pauseBM = new createjs.Bitmap(pauseImg);
-	        pauseBM.addEventListener('click', _this2.togglePause);
-	        pauseBM.x = canvas.width - pauseBM.image.width - 40;
-	        pauseBM.y = 20;
-	        _this2.stage.addChild(pauseBM);
-	        _this2.stage.update();
-	      };
-	    }
+	    // setHeader() {
+	    //   let pauseImg = new Image();
+	    //   pauseImg.src = 'assets/images/pause-icon.png';
+	    //   pauseImg.onload = () => {
+	    //     let pauseBM = new createjs.Bitmap(pauseImg);
+	    //     pauseBM.addEventListener('click', this.togglePause)
+	    //     pauseBM.x = canvas.width - pauseBM.image.width - 40;
+	    //     pauseBM.y = 20;
+	    //     this.stage.addChild(pauseBM);
+	    //     this.stage.update();
+	    //   }
+	    // }
+	
 	  }, {
 	    key: 'play',
 	    value: function play() {
@@ -159,11 +157,20 @@
 	  }, {
 	    key: 'togglePause',
 	    value: function togglePause() {
+	      debugger;
 	      var isPaused = !createjs.Ticker.getPaused();
 	      createjs.Ticker.setPaused(isPaused);
 	      if (isPaused) {
-	        $('.fa-play').hide();
-	        $('.fa-pause').show();
+	        this.stage.removeChild('pauseBM');
+	        var playImg = new Image();
+	        playImg.src = 'assets/images/play-icon.png';
+	        var playBM = new createjs.Bitmap(playImg);
+	        playBM.addEventListener('click', this.togglePause);
+	        playBM.x = canvas.width - playBM.image.width - 40;
+	        playBM.y = 40;
+	        playBM.name = "playBM";
+	        this.stage.addChild(playBM);
+	        this.stage.update();
 	      } else {
 	        $('.fa-pause').hide();
 	        $('.fa-play').show();
