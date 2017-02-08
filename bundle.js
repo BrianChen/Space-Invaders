@@ -98,6 +98,7 @@
 	
 	    this.play = this.play.bind(this);
 	    this.setHeader = this.setHeader.bind(this);
+	    this.togglePause = this.togglePause.bind(this);
 	    this.init();
 	  }
 	
@@ -112,68 +113,94 @@
 	        _this.play();
 	      });
 	    }
+	  }, {
+	    key: 'setHeader',
+	    value: function setHeader() {
+	      var _this2 = this;
 	
-	    // setHeader() {
-	    //   let pauseImg = new Image();
-	    //   pauseImg.src = 'assets/images/pause-icon.png';
-	    //   pauseImg.onload = () => {
-	    //     let pauseBM = new createjs.Bitmap(pauseImg);
-	    //     pauseBM.addEventListener('click', this.togglePause)
-	    //     pauseBM.x = canvas.width - pauseBM.image.width - 40;
-	    //     pauseBM.y = 20;
-	    //     this.stage.addChild(pauseBM);
-	    //     this.stage.update();
-	    //   }
-	    // }
-	
+	      var pauseImg = new Image();
+	      pauseImg.src = 'assets/images/pause-icon.png';
+	      pauseImg.onload = function () {
+	        var pauseBM = new createjs.Bitmap(pauseImg);
+	        pauseBM.addEventListener('click', _this2.togglePause);
+	        pauseBM.x = canvas.width - pauseBM.image.width - 40;
+	        pauseBM.y = 20;
+	        pauseBM.name = 'pauseBM';
+	        _this2.stage.addChild(pauseBM);
+	        _this2.stage.update();
+	      };
+	    }
 	  }, {
 	    key: 'play',
 	    value: function play() {
+	      var _this3 = this;
+	
 	      this.stage.removeAllChildren();
 	      this.spaceship = new _spaceship2.default(this.stage);
-	      // this.aliens = new Alien(this.stage);
-	      // this.aliens.draw(5);
+	      this.aliens = new _alien2.default(this.stage);
+	      this.aliens.draw();
 	      this.spaceship.draw();
-	      // createjs.Ticker.setFPS(40);
-	      // createjs.Ticker.on("tick", () => this.handleTick());
+	      createjs.Ticker.setFPS(10);
+	      createjs.Ticker.on("tick", function () {
+	        return _this3.handleTick();
+	      });
 	      document.addEventListener("keydown", this.keyDown.bind(this));
 	    }
 	  }, {
 	    key: 'handleTick',
 	    value: function handleTick() {
 	      if (!createjs.Ticker.getPaused()) {
-	        // this.alien.moveAliens();
+	        this.aliens.move();
 	        // Bullet.moveBullets(this.stage, this.spaceship);
 	        // Bullet.moveAlienBullets(this.stage, this.alien);
-	        _bullet2.default.checkHits(this.stage, this.spaceship, this.alien);
-	        _bullet2.default.checkIfDamaged(this.stage, this.alien);
-	        var randomNum = Math.floor(Math.random() * 50) + 1;
-	        if (randomNum == 5) {
-	          this.alien.fireAlienBullets();
-	        }
+	        // Bullet.checkHits(this.stage, this.spaceship, this.alien);
+	        // Bullet.checkIfDamaged(this.stage, this.alien);
+	        // let randomNum = Math.floor(Math.random() * 50) + 1;
+	        // if (randomNum == 5) {
+	        //   this.alien.fireAlienBullets();
+	        // }
 	        this.stage.update();
 	      }
 	    }
 	  }, {
 	    key: 'togglePause',
 	    value: function togglePause() {
-	      debugger;
+	      var _this4 = this;
+	
 	      var isPaused = !createjs.Ticker.getPaused();
 	      createjs.Ticker.setPaused(isPaused);
 	      if (isPaused) {
-	        this.stage.removeChild('pauseBM');
-	        var playImg = new Image();
-	        playImg.src = 'assets/images/play-icon.png';
-	        var playBM = new createjs.Bitmap(playImg);
-	        playBM.addEventListener('click', this.togglePause);
-	        playBM.x = canvas.width - playBM.image.width - 40;
-	        playBM.y = 40;
-	        playBM.name = "playBM";
-	        this.stage.addChild(playBM);
-	        this.stage.update();
+	        (function () {
+	          var pauseBM = _this4.stage.getChildByName('pauseBM');
+	          _this4.stage.removeChild(pauseBM);
+	          var playImg = new Image();
+	          playImg.src = 'assets/images/play-icon.png';
+	          playImg.onload = function () {
+	            var playBM = new createjs.Bitmap(playImg);
+	            playBM.addEventListener('click', _this4.togglePause);
+	            playBM.x = canvas.width - playBM.image.width - 40;
+	            playBM.y = 40;
+	            playBM.name = "playBM";
+	            _this4.stage.addChild(playBM);
+	            _this4.stage.update();
+	          };
+	        })();
 	      } else {
-	        $('.fa-pause').hide();
-	        $('.fa-play').show();
+	        (function () {
+	          var playBM = _this4.stage.getChildByName('playBM');
+	          _this4.stage.removeChild(playBM);
+	          var pauseImg = new Image();
+	          pauseImg.src = 'assets/images/pause-icon.png';
+	          pauseImg.onload = function () {
+	            var pauseBM = new createjs.Bitmap(pauseImg);
+	            pauseBM.addEventListener('click', _this4.togglePause);
+	            pauseBM.x = canvas.width - pauseBM.image.width - 40;
+	            pauseBM.y = 40;
+	            pauseBM.name = 'pauseBM';
+	            _this4.stage.addChild(pauseBM);
+	            _this4.stage.update();
+	          };
+	        })();
 	      }
 	    }
 	  }, {
@@ -274,14 +301,14 @@
 	      }
 	      this.stage.update();
 	    }
-	    //
-	    //   fire() {
-	    //     let bullet = Bullet.drawSpaceshipBullet(this.x, this.y)
-	    //     this.bullets.push(bullet);
-	    //     this.stage.addChild(bullet);
-	    //     this.stage.update();
-	    //   }
-	
+	  }, {
+	    key: "fire",
+	    value: function fire() {
+	      var bullet = _bullet2.default.drawSpaceshipBullet(this.x, this.y);
+	      this.bullets.push(bullet);
+	      this.stage.addChild(bullet);
+	      this.stage.update();
+	    }
 	  }]);
 	
 	  return Spaceship;
@@ -492,44 +519,51 @@
 	
 	  _createClass(Alien, [{
 	    key: 'draw',
-	    value: function draw(rows) {
+	    value: function draw() {
 	      this.aliens = new createjs.Container();
 	      this.aliens.name = "alienContainer";
 	
-	      for (var i = 0; i < rows; i++) {
+	      for (var i = 0; i < 5; i++) {
 	        for (var j = 0; j < 11; j++) {
-	          var x = j * 20;
-	          var y = i * 10;
+	          var x = j * 75;
+	          var y = i * 75;
 	          var img = new Image();
-	          img.src = 'assets/alien.png';
-	          var bitmap = new createjs.Bitmap('assets/images/alien.png');
+	          var bitmap = void 0;
+	          if (i < 2) {
+	            bitmap = new createjs.Bitmap('assets/images/alien2.png');
+	          } else if (i < 4) {
+	            bitmap = new createjs.Bitmap('assets/images/alien.png');
+	          } else {
+	            bitmap = new createjs.Bitmap('assets/images/alien3.png');
+	          }
 	          bitmap.x = x;
 	          bitmap.y = y;
-	          bitmap.width = 30;
-	          bitmap.height = 5;
+	          bitmap.scaleX = 2;
+	          bitmap.scaleY = 2;
 	          this.aliens.addChild(bitmap);
 	        }
 	      }
-	      this.aliens.x = canvas.width / 2 - 80;
+	      this.aliens.x = canvas.width / 2 - 400;
+	      this.aliens.y = 200;
 	      this.stage.addChild(this.aliens);
 	      this.stage.update();
 	    }
 	  }, {
-	    key: 'moveAliens',
-	    value: function moveAliens() {
+	    key: 'move',
+	    value: function move() {
 	      if (this.right) {
-	        if (this.aliens.x + 160 > canvas.width - 30) {
+	        if (this.aliens.x + 825 > canvas.width - 20) {
 	          this.right = !this.right;
-	          this.aliens.y += 5;
+	          this.aliens.y += 40;
 	        } else {
-	          this.aliens.x += 1;
+	          this.aliens.x += 10;
 	        }
 	      } else {
 	        if (this.aliens.x < 20) {
 	          this.right = !this.right;
-	          this.aliens.y += 5;
+	          this.aliens.y += 40;
 	        } else {
-	          this.aliens.x -= 1;
+	          this.aliens.x -= 10;
 	        }
 	      }
 	    }
