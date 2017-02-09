@@ -153,7 +153,7 @@
 	        this.aliens.move();
 	        _bullet2.default.moveBullets(this.stage, this.spaceship);
 	        // Bullet.moveAlienBullets(this.stage, this.alien);
-	        // Bullet.checkHits(this.stage, this.spaceship, this.alien);
+	        _bullet2.default.checkHits(this.stage, this.spaceship, this.alien);
 	        // Bullet.checkIfDamaged(this.stage, this.alien);
 	        // let randomNum = Math.floor(Math.random() * 50) + 1;
 	        // if (randomNum == 5) {
@@ -306,6 +306,7 @@
 	    value: function fire() {
 	      var bullet = _bullet2.default.drawSpaceshipBullet(this.x, this.y);
 	      this.bullets.push(bullet);
+	
 	      this.stage.addChild(bullet);
 	      this.stage.update();
 	    }
@@ -394,37 +395,37 @@
 	    //   }
 	    // }
 	
+	    // static checkHits(stage, spaceship, alien) {
+	    //
+	    // }
+	
 	  }, {
 	    key: 'checkHits',
-	    value: function checkHits(stage, spaceship, alien) {}
-	
-	    // static checkHits(stage, spaceship, alien) {
-	    //   let alienContainer = stage.getChildByName('alienContainer');
-	    //   let bullets = spaceship.bullets;
-	    //   if (alienContainer && bullets.length > 0) {
-	    //     let aliens = alienContainer.children;
-	    //     if (aliens.length == 0){
-	    //       stage.removeChild(alien.aliens);
-	    //       alien.draw(4);
-	    //     } else {
-	    //       for (let i = 0; i < bullets.length; i++){
-	    //         for (let j = 0; j < aliens.length; j++){
-	    //           let bullet = bullets[i];
-	    //           let alien = aliens[j];
-	    //           if ( bullet.y <= alien.localToGlobal(0,0).y + alien.height &&
-	    //                 bullet.x <= alien.localToGlobal(0,0).x + alien.width &&
-	    //                 bullet.x >= alien.localToGlobal(0,0).x){
-	    //                   incrementScore();
-	    //                   spaceship.bullets.splice(i, 1);
-	    //                   alienContainer.removeChild(alien);
-	    //                   stage.removeChild(bullet);
-	    //
-	    //           }
-	    //         }
-	    //       }
-	    //     }
-	    //   }
-	    // }
+	    value: function checkHits(stage, spaceship, alien) {
+	      var alienContainer = stage.getChildByName('alienContainer');
+	      var bullets = spaceship.bullets;
+	      if (alienContainer && bullets.length > 0) {
+	        var aliens = alienContainer.children;
+	        if (aliens.length == 0) {
+	          stage.removeChild(alien.aliens);
+	          alien.draw(4);
+	        } else {
+	          for (var i = 0; i < bullets.length; i++) {
+	            for (var j = 0; j < aliens.length; j++) {
+	              var bullet = bullets[i];
+	              var _alien = aliens[j];
+	              if (bullet.y <= _alien.localToGlobal(0, 0).y + _alien.image.height && bullet.x <= _alien.localToGlobal(0, 0).x + _alien.image.width && bullet.x >= _alien.localToGlobal(0, 0).x) {
+	                debugger;
+	                (0, _helper.incrementScore)();
+	                spaceship.bullets.splice(i, 1);
+	                alienContainer.removeChild(_alien);
+	                stage.removeChild(bullet);
+	              }
+	            }
+	          }
+	        }
+	      }
+	    }
 	
 	    // static checkIfDamaged(stage, alien) {
 	    //   let bullets = alien.bullets;
