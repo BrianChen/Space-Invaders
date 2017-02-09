@@ -151,7 +151,7 @@
 	    value: function handleTick() {
 	      if (!createjs.Ticker.getPaused()) {
 	        this.aliens.move();
-	        // Bullet.moveBullets(this.stage, this.spaceship);
+	        _bullet2.default.moveBullets(this.stage, this.spaceship);
 	        // Bullet.moveAlienBullets(this.stage, this.alien);
 	        // Bullet.checkHits(this.stage, this.spaceship, this.alien);
 	        // Bullet.checkIfDamaged(this.stage, this.alien);
@@ -274,8 +274,8 @@
 	      img.src = "assets/images/spaceship.png";
 	      img.onload = function () {
 	        var bitmap = new createjs.Bitmap(img);
-	        bitmap.x = canvas.width / 2 - bitmap.image.width / 2;
-	        bitmap.y = canvas.height - bitmap.image.height - 20;
+	        bitmap.x = _this.x = canvas.width / 2 - bitmap.image.width / 2;
+	        bitmap.y = _this.y = canvas.height - bitmap.image.height - 20;
 	        bitmap.name = "spaceship";
 	        _this.stage.addChild(bitmap);
 	        _this.stage.update();
@@ -342,102 +342,109 @@
 	  _createClass(Bullet, null, [{
 	    key: 'drawSpaceshipBullet',
 	    value: function drawSpaceshipBullet(x, y) {
-	      var bullet = new createjs.Shape();
-	      bullet.graphics.beginFill("yellow").drawRect(0, 0, 2, 5);
-	      bullet.x = x + 15;
-	      bullet.y = y;
-	      bullet.width = 2;
-	      bullet.height = 5;
+	      var bullet = new createjs.Bitmap('assets/images/missle.png');
+	      bullet.x = x + 40;
+	      bullet.y = y - 40;
+	      bullet.scaleX = 2;
+	      bullet.scaleY = 2;
+	      bullet.name = 'spaceshipBullet';
 	      return bullet;
 	    }
-	  }, {
-	    key: 'drawAlienBullet',
-	    value: function drawAlienBullet(stage) {
-	      var aliens = stage.getChildByName('alienContainer').children;
-	      var randNum = Math.floor(Math.random() * aliens.length) + 1;
-	      var x = aliens[randNum].localToGlobal(0, 0).x + aliens[randNum].width / 2;
-	      var y = aliens[randNum].localToGlobal(0, 0).y + aliens[randNum].height;
 	
-	      var bullet = new createjs.Shape();
-	      bullet.graphics.beginFill("red").drawRect(0, 0, 2, 3);
-	      bullet.x = x;
-	      bullet.y = y;
-	      bullet.width = 2;
-	      bullet.height = 3;
-	      return bullet;
-	    }
+	    // static drawAlienBullet(stage) {
+	    //   let aliens = stage.getChildByName('alienContainer').children;
+	    //   let randNum = Math.floor(Math.random() * aliens.length) + 1;
+	    //   let x = aliens[randNum].localToGlobal(0,0).x + (aliens[randNum].width/2);
+	    //   let y = aliens[randNum].localToGlobal(0,0).y + aliens[randNum].height;
+	    //
+	    //   let bullet = new createjs.Shape();
+	    //   bullet.graphics.beginFill("red").drawRect(0,0,2,3);
+	    //   bullet.x = x;
+	    //   bullet.y = y;
+	    //   bullet.width = 2;
+	    //   bullet.height = 3;
+	    //   return bullet;
+	    // }
+	
 	  }, {
 	    key: 'moveBullets',
 	    value: function moveBullets(stage, spaceship) {
 	      var bullets = spaceship.bullets;
 	      for (var i = 0; i < bullets.length; i++) {
-	        bullets[i].y -= 3;
-	        if (bullets[i].y < 0) {
-	          spaceship.bullets.splice(i, 1);
+	        bullets[i].y -= 10;
+	        if (bullets[i].y < 200) {
 	          stage.removeChild(bullets[i]);
+	          spaceship.bullets.splice(i, 1);
 	        }
 	      }
 	    }
-	  }, {
-	    key: 'moveAlienBullets',
-	    value: function moveAlienBullets(stage, alien) {
-	      var bullets = alien.bullets;
-	      var deleteBulletIndexs = [];
-	      for (var i = 0; i < bullets.length; i++) {
-	        bullets[i].y += 1;
-	        if (bullets[i].y > canvas.height) {
-	          deleteBulletIndexs.push(i);
-	        }
-	      }
-	      for (var j = 0; j < deleteBulletIndexs.length; j++) {
-	        alien.bullets.splice(j, 1);
-	        stage.removeChild(bullets[j]);
-	      }
-	    }
+	
+	    // static moveAlienBullets(stage, alien) {
+	    //   let bullets = alien.bullets;
+	    //   let deleteBulletIndexs = [];
+	    //   for (let i = 0; i < bullets.length; i++) {
+	    //     bullets[i].y += 1;
+	    //     if (bullets[i].y > canvas.height) {
+	    //       deleteBulletIndexs.push(i);
+	    //     }
+	    //   }
+	    //   for (let j = 0; j < deleteBulletIndexs.length; j++){
+	    //     alien.bullets.splice(j,1);
+	    //     stage.removeChild(bullets[j]);
+	    //   }
+	    // }
+	
 	  }, {
 	    key: 'checkHits',
-	    value: function checkHits(stage, spaceship, alien) {
-	      var alienContainer = stage.getChildByName('alienContainer');
-	      var bullets = spaceship.bullets;
-	      if (alienContainer && bullets.length > 0) {
-	        var aliens = alienContainer.children;
-	        if (aliens.length == 0) {
-	          stage.removeChild(alien.aliens);
-	          alien.draw(4);
-	        } else {
-	          for (var i = 0; i < bullets.length; i++) {
-	            for (var j = 0; j < aliens.length; j++) {
-	              var bullet = bullets[i];
-	              var _alien = aliens[j];
-	              if (bullet.y <= _alien.localToGlobal(0, 0).y + _alien.height && bullet.x <= _alien.localToGlobal(0, 0).x + _alien.width && bullet.x >= _alien.localToGlobal(0, 0).x) {
-	                (0, _helper.incrementScore)();
-	                spaceship.bullets.splice(i, 1);
-	                alienContainer.removeChild(_alien);
-	                stage.removeChild(bullet);
-	              }
-	            }
-	          }
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'checkIfDamaged',
-	    value: function checkIfDamaged(stage, alien) {
-	      var bullets = alien.bullets;
-	      var spaceship = stage.getChildByName("spaceship");
-	      if (bullets.length > 0) {
-	        for (var i = 0; i < bullets.length; i++) {
-	          if (bullets[i].y + bullets[i].height >= spaceship.y && bullets[i].x <= spaceship.x + spaceship.width && bullets[i].x + bullets[i].width >= spaceship.x) {
-	            //hit
-	            (0, _helper.updateLives)(stage);
-	            alien.bullets.splice(i, 1);
-	            stage.removeChild(bullets[i]);
-	            spaceship.x = canvas.width / 2 - 15;
-	            spaceship.y = canvas.height - 30;
-	          }
-	        }
-	      }
-	    }
+	    value: function checkHits(stage, spaceship, alien) {}
+	
+	    // static checkHits(stage, spaceship, alien) {
+	    //   let alienContainer = stage.getChildByName('alienContainer');
+	    //   let bullets = spaceship.bullets;
+	    //   if (alienContainer && bullets.length > 0) {
+	    //     let aliens = alienContainer.children;
+	    //     if (aliens.length == 0){
+	    //       stage.removeChild(alien.aliens);
+	    //       alien.draw(4);
+	    //     } else {
+	    //       for (let i = 0; i < bullets.length; i++){
+	    //         for (let j = 0; j < aliens.length; j++){
+	    //           let bullet = bullets[i];
+	    //           let alien = aliens[j];
+	    //           if ( bullet.y <= alien.localToGlobal(0,0).y + alien.height &&
+	    //                 bullet.x <= alien.localToGlobal(0,0).x + alien.width &&
+	    //                 bullet.x >= alien.localToGlobal(0,0).x){
+	    //                   incrementScore();
+	    //                   spaceship.bullets.splice(i, 1);
+	    //                   alienContainer.removeChild(alien);
+	    //                   stage.removeChild(bullet);
+	    //
+	    //           }
+	    //         }
+	    //       }
+	    //     }
+	    //   }
+	    // }
+	
+	    // static checkIfDamaged(stage, alien) {
+	    //   let bullets = alien.bullets;
+	    //   let spaceship = stage.getChildByName("spaceship");
+	    //   if (bullets.length > 0){
+	    //     for (let i = 0; i < bullets.length; i++){
+	    //       if ( bullets[i].y + bullets[i].height >= spaceship.y &&
+	    //             bullets[i].x <= spaceship.x + spaceship.width &&
+	    //             bullets[i].x + bullets[i].width >= spaceship.x){
+	    //               //hit
+	    //               updateLives(stage);
+	    //               alien.bullets.splice(i,1);
+	    //               stage.removeChild(bullets[i]);
+	    //               spaceship.x = canvas.width /2 - 15;
+	    //               spaceship.y = canvas.height - 30;
+	    //       }
+	    //     }
+	    //   }
+	    // }
+	
 	  }]);
 	
 	  return Bullet;
@@ -527,7 +534,6 @@
 	        for (var j = 0; j < 11; j++) {
 	          var x = j * 75;
 	          var y = i * 75;
-	          var img = new Image();
 	          var bitmap = void 0;
 	          if (i < 2) {
 	            bitmap = new createjs.Bitmap('assets/images/alien2.png');
