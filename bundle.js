@@ -140,7 +140,7 @@
 	      this.aliens = new _alien2.default(this.stage);
 	      this.aliens.draw();
 	      this.spaceship.draw();
-	      createjs.Ticker.setFPS(10);
+	      createjs.Ticker.setFPS(20);
 	      createjs.Ticker.on("tick", function () {
 	        return _this3.handleTick();
 	      });
@@ -152,13 +152,13 @@
 	      if (!createjs.Ticker.getPaused()) {
 	        this.aliens.move();
 	        _bullet2.default.moveBullets(this.stage, this.spaceship);
-	        // Bullet.moveAlienBullets(this.stage, this.alien);
-	        _bullet2.default.checkHits(this.stage, this.spaceship, this.alien);
-	        // Bullet.checkIfDamaged(this.stage, this.alien);
-	        // let randomNum = Math.floor(Math.random() * 50) + 1;
-	        // if (randomNum == 5) {
-	        //   this.alien.fireAlienBullets();
-	        // }
+	        _bullet2.default.checkHits(this.stage, this.spaceship, this.aliens);
+	        _bullet2.default.checkIfDamaged(this.stage, this.aliens);
+	        var randomNum = Math.floor(Math.random() * 30) + 1;
+	        if (randomNum == 3) {
+	          this.aliens.fireAlienBullets();
+	        }
+	        _bullet2.default.moveAlienBullets(this.stage, this.aliens);
 	        this.stage.update();
 	      }
 	    }
@@ -224,12 +224,6 @@
 	        }
 	      }
 	    }
-	
-	    // keyUp(e) {
-	    //   let keycode = e.which || window.event.keycode;
-	    //   this.spaceship
-	    // }
-	
 	  }]);
 	
 	  return SpaceInvadersGame;
@@ -351,54 +345,50 @@
 	      bullet.name = 'spaceshipBullet';
 	      return bullet;
 	    }
+	  }, {
+	    key: 'drawAlienBullet',
+	    value: function drawAlienBullet(stage) {
+	      var aliens = stage.getChildByName('alienContainer').children;
+	      var randNum = Math.floor(Math.random() * aliens.length) + 1;
+	      var x = aliens[randNum].localToGlobal(0, 0).x + aliens[randNum].image.width / 2;
+	      var y = aliens[randNum].localToGlobal(0, 0).y + aliens[randNum].image.height;
 	
-	    // static drawAlienBullet(stage) {
-	    //   let aliens = stage.getChildByName('alienContainer').children;
-	    //   let randNum = Math.floor(Math.random() * aliens.length) + 1;
-	    //   let x = aliens[randNum].localToGlobal(0,0).x + (aliens[randNum].width/2);
-	    //   let y = aliens[randNum].localToGlobal(0,0).y + aliens[randNum].height;
-	    //
-	    //   let bullet = new createjs.Shape();
-	    //   bullet.graphics.beginFill("red").drawRect(0,0,2,3);
-	    //   bullet.x = x;
-	    //   bullet.y = y;
-	    //   bullet.width = 2;
-	    //   bullet.height = 3;
-	    //   return bullet;
-	    // }
-	
+	      var bullet = new createjs.Bitmap('/assets/images/alienbullet.png');
+	      bullet.setBounds(x, y, bullet.image.width, bullet.image.height);
+	      bullet.x = x;
+	      bullet.y = y;
+	      bullet.scaleX = 2;
+	      bullet.scaleY = 2;
+	      bullet.width = 2;
+	      bullet.height = 3;
+	      return bullet;
+	    }
 	  }, {
 	    key: 'moveBullets',
 	    value: function moveBullets(stage, spaceship) {
 	      var bullets = spaceship.bullets;
 	      for (var i = 0; i < bullets.length; i++) {
-	        bullets[i].y -= 10;
+	        bullets[i].y -= 30;
 	        if (bullets[i].y < 200) {
 	          stage.removeChild(bullets[i]);
 	          spaceship.bullets.splice(i, 1);
 	        }
 	      }
 	    }
+	  }, {
+	    key: 'moveAlienBullets',
+	    value: function moveAlienBullets(stage, alien) {
+	      var bullets = alien.bullets;
+	      var deleteBulletIndexs = [];
 	
-	    // static moveAlienBullets(stage, alien) {
-	    //   let bullets = alien.bullets;
-	    //   let deleteBulletIndexs = [];
-	    //   for (let i = 0; i < bullets.length; i++) {
-	    //     bullets[i].y += 1;
-	    //     if (bullets[i].y > canvas.height) {
-	    //       deleteBulletIndexs.push(i);
-	    //     }
-	    //   }
-	    //   for (let j = 0; j < deleteBulletIndexs.length; j++){
-	    //     alien.bullets.splice(j,1);
-	    //     stage.removeChild(bullets[j]);
-	    //   }
-	    // }
-	
-	    // static checkHits(stage, spaceship, alien) {
-	    //
-	    // }
-	
+	      for (var i = 0; i < bullets.length; i++) {
+	        if (bullets[i].y > canvas.height - 20) {
+	          stage.removeChild(bullets[i]);
+	          alien.bullets.splice(i, 1);
+	        }
+	        bullets[i].y += 10;
+	      }
+	    }
 	  }, {
 	    key: 'checkHits',
 	    value: function checkHits(stage, spaceship, alien) {
@@ -408,14 +398,13 @@
 	        var aliens = alienContainer.children;
 	        if (aliens.length == 0) {
 	          stage.removeChild(alien.aliens);
-	          alien.draw(4);
+	          alien.draw();
 	        } else {
 	          for (var i = 0; i < bullets.length; i++) {
 	            for (var j = 0; j < aliens.length; j++) {
 	              var bullet = bullets[i];
 	              var _alien = aliens[j];
 	              if (bullet.y <= _alien.localToGlobal(0, 0).y + _alien.image.height && bullet.x <= _alien.localToGlobal(0, 0).x + _alien.image.width && bullet.x >= _alien.localToGlobal(0, 0).x) {
-	                debugger;
 	                (0, _helper.incrementScore)();
 	                spaceship.bullets.splice(i, 1);
 	                alienContainer.removeChild(_alien);
@@ -427,25 +416,51 @@
 	      }
 	    }
 	
-	    // static checkIfDamaged(stage, alien) {
-	    //   let bullets = alien.bullets;
-	    //   let spaceship = stage.getChildByName("spaceship");
-	    //   if (bullets.length > 0){
-	    //     for (let i = 0; i < bullets.length; i++){
-	    //       if ( bullets[i].y + bullets[i].height >= spaceship.y &&
-	    //             bullets[i].x <= spaceship.x + spaceship.width &&
-	    //             bullets[i].x + bullets[i].width >= spaceship.x){
-	    //               //hit
-	    //               updateLives(stage);
-	    //               alien.bullets.splice(i,1);
-	    //               stage.removeChild(bullets[i]);
-	    //               spaceship.x = canvas.width /2 - 15;
-	    //               spaceship.y = canvas.height - 30;
+	    // static checkHits(stage, spaceship, alien) {
+	    //   let alienContainer = stage.getChildByName('alienContainer');
+	    //   let bullets = spaceship.bullets;
+	    //   if (alienContainer && bullets.length > 0) {
+	    //     let aliens = alienContainer.children;
+	    //     if (aliens.length == 0) {
+	    //       stage.removeChild(alien.aliens);
+	    //       alien.draw(4);
+	    //     } else {
+	    //       //checking each alien - hitTest
+	    //       for (let i = 0; i < aliens.length; i++) {
+	    //         for (let j = 0; j < bullets.length; j++) {
+	    //           let alien = aliens[i];
+	    //           let bullet = bullets[j];
+	    //           if (collisionTest(alien, bullet)) {
+	    //             incrementScore();
+	    //             spaceship.bullets.splice(j, 1);
+	    //             alienContainer.removeChild(alien);
+	    //             stage.removeChild(bullet);
+	    //           }
+	    //         }
 	    //       }
 	    //     }
 	    //   }
 	    // }
 	
+	
+	  }, {
+	    key: 'checkIfDamaged',
+	    value: function checkIfDamaged(stage, alien) {
+	      var bullets = alien.bullets;
+	      var spaceship = stage.getChildByName("spaceship");
+	      if (bullets.length > 0) {
+	        for (var i = 0; i < bullets.length; i++) {
+	          if (bullets[i].y + bullets[i].image.height >= spaceship.y && bullets[i].x <= spaceship.x + spaceship.image.width && bullets[i].x + bullets[i].image.width >= spaceship.x) {
+	            //hit
+	            (0, _helper.updateLives)(stage);
+	            stage.removeChild(bullets[i]);
+	            alien.bullets.splice(i, 1);
+	            spaceship.x = canvas.width / 2 - spaceship.image.width / 2;
+	            spaceship.y = canvas.height - spaceship.image.height - 20;
+	          }
+	        }
+	      }
+	    }
 	  }]);
 	
 	  return Bullet;
@@ -492,9 +507,28 @@
 	
 	var gameOver = function gameOver() {};
 	
+	var collisionTest = function collisionTest(alien, bullet) {
+	  var alienX1 = alien.localToGlobal(0, 0).x;
+	  var alienX2 = alien.localToGlobal(0, 0).x + alien.image.width;
+	  var alienY1 = alien.localToGlobal(0, 0).y;
+	  var alienY2 = alien.localToGlobal(0, 0).y + alien.image.height;
+	
+	  var bulletX1 = bullet.x;
+	  var bulletX2 = bullet.x + bullet.image.width;
+	  var bulletY1 = bullet.y;
+	  var bulletY2 = bullet.y + bullet.image.height;
+	
+	  if ((bulletX1 >= alienX1 && bulletX1 <= alienX2 || bulletX2 >= alienX1 && bulletX2 <= alienX2) && (bulletY1 <= alienY2 && bulletY1 >= alienY1 || bulletY2 <= alienY2 && bulletY2 >= alienY1)) {
+	    return true;
+	  } else {
+	    return false;
+	  }
+	};
+	
 	exports.incrementScore = incrementScore;
 	exports.updateLives = updateLives;
 	exports.gameOver = gameOver;
+	exports.collisionTest = collisionTest;
 
 /***/ },
 /* 5 */
@@ -545,6 +579,7 @@
 	          }
 	          bitmap.x = x;
 	          bitmap.y = y;
+	          bitmap.setBounds(x, y, bitmap.image.width, bitmap.image.height);
 	          bitmap.scaleX = 2;
 	          bitmap.scaleY = 2;
 	          this.aliens.addChild(bitmap);
