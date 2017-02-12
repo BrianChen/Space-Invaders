@@ -127,8 +127,91 @@
 	        pauseBM.y = 20;
 	        pauseBM.name = 'pauseBM';
 	        _this2.stage.addChild(pauseBM);
-	        _this2.stage.update();
 	      };
+	
+	      var scoreTitle = document.createElement('div');
+	      scoreTitle.id = 'scoreTitle';
+	      scoreTitle.innerHTML = 'Score: ';
+	      scoreTitle.style.height = '20px';
+	      scoreTitle.style.width = '50px';
+	      scoreTitle.style.backgroundColor = 'black';
+	      scoreTitle.style.color = 'yellow';
+	      scoreTitle.style.fontWeight = 'bold';
+	      scoreTitle.style.fontSize = '22px';
+	      scoreTitle.style.position = "absolute";
+	      scoreTitle.style.marginLeft = 'auto';
+	      scoreTitle.style.marginRight = 'auto';
+	      scoreTitle.style.marginTop = 'auto';
+	      scoreTitle.style.marginBottom = 'auto';
+	      scoreTitle.style.top = 0;
+	      scoreTitle.style.bottom = '549px';
+	      scoreTitle.style.left = 0;
+	      scoreTitle.style.right = '512px';
+	
+	      var score = document.createElement('div');
+	      score.id = 'score';
+	      score.innerHTML = '0';
+	      score.style.height = '20px';
+	      score.style.width = '50px';
+	      score.style.backgroundColor = 'black';
+	      score.style.color = 'yellow';
+	      score.style.fontWeight = 'bold';
+	      score.style.fontSize = '22px';
+	      score.style.position = "absolute";
+	      score.style.marginLeft = 'auto';
+	      score.style.marginRight = 'auto';
+	      score.style.marginTop = 'auto';
+	      score.style.marginBottom = 'auto';
+	      score.style.top = 0;
+	      score.style.bottom = '549px';
+	      score.style.left = 0;
+	      score.style.right = '371px';
+	
+	      var livesTitle = document.createElement('div');
+	      livesTitle.id = 'livesTitle';
+	      livesTitle.innerHTML = 'Lives: ';
+	      livesTitle.style.height = '20px';
+	      livesTitle.style.width = '50px';
+	      livesTitle.style.backgroundColor = 'black';
+	      livesTitle.style.color = 'yellow';
+	      livesTitle.style.fontWeight = 'bold';
+	      livesTitle.style.fontSize = '22px';
+	      livesTitle.style.position = "absolute";
+	      livesTitle.style.marginLeft = 'auto';
+	      livesTitle.style.marginRight = 'auto';
+	      livesTitle.style.marginTop = 'auto';
+	      livesTitle.style.marginBottom = 'auto';
+	      livesTitle.style.top = 0;
+	      livesTitle.style.bottom = '549px';
+	      livesTitle.style.left = 0;
+	      livesTitle.style.right = '89px';
+	
+	      var lives = document.createElement('div');
+	      lives.id = 'lives';
+	      lives.innerHTML = '3';
+	      lives.style.height = '20px';
+	      lives.style.width = '50px';
+	      lives.style.backgroundColor = 'black';
+	      lives.style.color = 'yellow';
+	      lives.style.fontWeight = 'bold';
+	      lives.style.fontSize = '22px';
+	      lives.style.position = "absolute";
+	      lives.style.marginLeft = 'auto';
+	      lives.style.marginRight = 'auto';
+	      lives.style.marginTop = 'auto';
+	      lives.style.marginBottom = 'auto';
+	      lives.style.top = 0;
+	      lives.style.bottom = '549px';
+	      lives.style.left = '50px';
+	      lives.style.right = '0px';
+	
+	      document.body.appendChild(scoreTitle);
+	      document.body.appendChild(score);
+	      document.body.appendChild(livesTitle);
+	      document.body.appendChild(lives);
+	
+	      //need this
+	      this.stage.update();
 	    }
 	  }, {
 	    key: 'play',
@@ -442,7 +525,6 @@
 	    //   }
 	    // }
 	
-	
 	  }, {
 	    key: 'checkIfDamaged',
 	    value: function checkIfDamaged(stage, alien) {
@@ -478,9 +560,9 @@
 	  value: true
 	});
 	var incrementScore = function incrementScore() {
-	  var score = $('.score').html();
+	  var score = $('#score').html();
 	  var newScore = parseInt(score) + 100;
-	  $('.score').html(newScore.toString());
+	  $('#score').html(newScore.toString());
 	};
 	
 	// const newWave = (stage) => {
