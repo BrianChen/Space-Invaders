@@ -543,6 +543,9 @@
 	        }
 	      }
 	    }
+	  }, {
+	    key: 'removeAllBullets',
+	    value: function removeAllBullets(stage, spaceship, alien) {}
 	  }]);
 	
 	  return Bullet;
