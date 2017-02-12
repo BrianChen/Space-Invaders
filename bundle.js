@@ -572,10 +572,10 @@
 	var gotHit = function gotHit() {};
 	
 	var updateLives = function updateLives(stage) {
-	  var lives = $('.lives').html();
+	  var lives = $('#lives').html();
 	  var newLives = parseInt(lives) - 1;
 	  if (newLives === 0) {
-	    $('.lives').html(newLives.toString());
+	    $('#lives').html(newLives.toString());
 	    stage.removeAllChildren();
 	    var text = new createjs.Text("Game Over", "20px Arial", "#ff7700");
 	    text.x = canvas.width / 2 - 50;
@@ -583,8 +583,17 @@
 	    stage.addChild(text);
 	    stage.update();
 	  } else {
-	    $('.lives').html(newLives.toString());
+	    $('#lives').html(newLives.toString());
 	  }
+	  createjs.Ticker.setPaused(true);
+	  var delay = 500;
+	  var startTime = createjs.Ticker.getTime();
+	  while (1) {
+	    if (createjs.Ticker.getTime() - startTime > delay) {
+	      break;
+	    }
+	  }
+	  createjs.Ticker.setPaused(false);
 	};
 	
 	var gameOver = function gameOver() {};
