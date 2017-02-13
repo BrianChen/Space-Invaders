@@ -236,7 +236,7 @@
 	        this.aliens.move();
 	        _bullet2.default.moveBullets(this.stage, this.spaceship);
 	        _bullet2.default.checkHits(this.stage, this.spaceship, this.aliens);
-	        _bullet2.default.checkIfDamaged(this.stage, this.aliens);
+	        _bullet2.default.checkIfDamaged(this.stage, this.spaceship, this.aliens);
 	        var randomNum = Math.floor(Math.random() * 30) + 1;
 	        if (randomNum == 3) {
 	          this.aliens.fireAlienBullets();
@@ -469,7 +469,7 @@
 	          stage.removeChild(bullets[i]);
 	          alien.bullets.splice(i, 1);
 	        }
-	        bullets[i].y += 10;
+	        bullets[i].y += 30;
 	      }
 	    }
 	  }, {
@@ -527,7 +527,7 @@
 	
 	  }, {
 	    key: 'checkIfDamaged',
-	    value: function checkIfDamaged(stage, alien) {
+	    value: function checkIfDamaged(stage, spaceshipClass, alien) {
 	      var bullets = alien.bullets;
 	      var spaceship = stage.getChildByName("spaceship");
 	      if (bullets.length > 0) {
@@ -543,9 +543,6 @@
 	        }
 	      }
 	    }
-	  }, {
-	    key: 'removeAllBullets',
-	    value: function removeAllBullets(stage, spaceship, alien) {}
 	  }]);
 	
 	  return Bullet;
@@ -578,18 +575,33 @@
 	  var lives = $('#lives').html();
 	  var newLives = parseInt(lives) - 1;
 	  if (newLives === 0) {
-	    $('#lives').html(newLives.toString());
-	    stage.removeAllChildren();
-	    var text = new createjs.Text("Game Over", "20px Arial", "#ff7700");
-	    text.x = canvas.width / 2 - 50;
-	    text.y = canvas.height / 2 - 20;
-	    stage.addChild(text);
-	    stage.update();
+	    (function () {
+	      $('#lives').html(newLives.toString());
+	      stage.removeAllChildren();
+	      var text = new createjs.Text("Game Over", "100px Arial", "#ff7700");
+	      text.x = canvas.width / 2 - 100;
+	      text.y = canvas.height / 2;
+	      var tryAgain = new createjs.Text("try again!", "50px Arial", "white");
+	      tryAgain.addEventListener("mouseover", function () {
+	        tryAgain.color = "yellow";
+	      });
+	      tryAgain.addEventListener("click", function () {
+	        $('#canvas').hide(), $('.welcome-screen').show();
+	        $('#scoreTitle').remove();
+	        $('#score').remove();
+	        $('#lives').remove();
+	        $('#livesTitle').remove();
+	      });
+	      tryAgain.x = canvas.width / 2 - 100;
+	      tryAgain.y = canvas.width / 2 + 100;
+	      stage.addChild(text, tryAgain);
+	      stage.update();
+	    })();
 	  } else {
 	    $('#lives').html(newLives.toString());
 	  }
 	  createjs.Ticker.setPaused(true);
-	  var delay = 500;
+	  var delay = 1000;
 	  var startTime = createjs.Ticker.getTime();
 	  while (1) {
 	    if (createjs.Ticker.getTime() - startTime > delay) {
@@ -692,14 +704,14 @@
 	          this.right = !this.right;
 	          this.aliens.y += 40;
 	        } else {
-	          this.aliens.x += 10;
+	          this.aliens.x += 5;
 	        }
 	      } else {
 	        if (this.aliens.x < 20) {
 	          this.right = !this.right;
 	          this.aliens.y += 40;
 	        } else {
-	          this.aliens.x -= 10;
+	          this.aliens.x -= 5;
 	        }
 	      }
 	    }
