@@ -57,6 +57,7 @@
 	  var stage = new createjs.Stage(canvas);
 	  window.stage = stage;
 	  window.canvas = canvas;
+	  stage.enableMouseOver();
 	  new _space_invaders_game2.default(stage, canvas);
 	});
 
@@ -223,6 +224,8 @@
 	      this.aliens = new _alien2.default(this.stage);
 	      this.aliens.draw();
 	      this.spaceship.draw();
+	      createjs.Ticker.removeAllEventListeners();
+	      debugger;
 	      createjs.Ticker.setFPS(20);
 	      createjs.Ticker.on("tick", function () {
 	        return _this3.handleTick();
@@ -238,7 +241,7 @@
 	        _bullet2.default.checkHits(this.stage, this.spaceship, this.aliens);
 	        _bullet2.default.checkIfDamaged(this.stage, this.spaceship, this.aliens);
 	        var randomNum = Math.floor(Math.random() * 30) + 1;
-	        if (randomNum == 3) {
+	        if (randomNum == 3 || randomNum == 2) {
 	          this.aliens.fireAlienBullets();
 	        }
 	        _bullet2.default.moveAlienBullets(this.stage, this.aliens);
@@ -579,11 +582,15 @@
 	      $('#lives').html(newLives.toString());
 	      stage.removeAllChildren();
 	      var text = new createjs.Text("Game Over", "100px Arial", "#ff7700");
-	      text.x = canvas.width / 2 - 100;
-	      text.y = canvas.height / 2;
+	      text.x = canvas.width / 2 - 260;
+	      text.y = canvas.height / 2 - 100;
 	      var tryAgain = new createjs.Text("try again!", "50px Arial", "white");
+	      tryAgain.cursor = "pointer";
 	      tryAgain.addEventListener("mouseover", function () {
 	        tryAgain.color = "yellow";
+	      });
+	      tryAgain.addEventListener("mouseout", function () {
+	        tryAgain.color = "white";
 	      });
 	      tryAgain.addEventListener("click", function () {
 	        $('#canvas').hide(), $('.welcome-screen').show();
@@ -593,7 +600,8 @@
 	        $('#livesTitle').remove();
 	      });
 	      tryAgain.x = canvas.width / 2 - 100;
-	      tryAgain.y = canvas.width / 2 + 100;
+	      tryAgain.y = canvas.width / 2;
+	      // debugger;
 	      stage.addChild(text, tryAgain);
 	      stage.update();
 	    })();
