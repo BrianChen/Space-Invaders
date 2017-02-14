@@ -95,11 +95,12 @@
 	
 	    this.stage = stage;
 	    this.canvas = canvas;
-	    this.pressedKeys = {};
+	    this.allowed = true;
 	
 	    this.play = this.play.bind(this);
 	    this.setHeader = this.setHeader.bind(this);
 	    this.togglePause = this.togglePause.bind(this);
+	    this.loadSound = this.loadSound.bind(this);
 	    this.init();
 	  }
 	
@@ -111,8 +112,17 @@
 	      $('.play-btn').click(function () {
 	        $('.welcome-screen').hide(), $('#canvas').show();
 	        _this.setHeader();
+	        _this.loadSound();
 	        _this.play();
 	      });
+	    }
+	  }, {
+	    key: 'loadSound',
+	    value: function loadSound() {
+	      createjs.Sound.registerSound("assets/sounds/explosion.wav", "explosion");
+	      createjs.Sound.registerSound("assets/sounds/invaderkilled.wav", "invaderkilled");
+	      createjs.Sound.registerSound("assets/sounds/shoot.wav", "shoot");
+	      createjs.Sound.registerSound("assets/sounds/cannon.wav", "cannon");
 	    }
 	  }, {
 	    key: 'setHeader',
@@ -231,6 +241,7 @@
 	        return _this3.handleTick();
 	      });
 	      document.addEventListener("keydown", this.keyDown.bind(this));
+	      document.addEventListener("keyup", this.keyUp.bind(this));
 	    }
 	  }, {
 	    key: 'handleTick',
@@ -295,20 +306,30 @@
 	      var keycode = e.which || window.event.keycode;
 	
 	      if (!createjs.Ticker.getPaused()) {
-	        if (keycode == 37) {
-	          //left
-	          e.preventDefault();
-	          this.spaceship.move(keycode);
-	        } else if (keycode == 39) {
-	          //right
-	          e.preventDefault();
-	          this.spaceship.move(keycode);
-	        } else if (keycode == 32) {
-	          //spacebar
-	          e.preventDefault();
-	          this.spaceship.fire();
+	        if (e.repeat != undefined) {
+	          this.allowed = !e.repeat;
+	        }
+	        if (this.allowed) {
+	          if (keycode == 37) {
+	            //left
+	            e.preventDefault();
+	            this.spaceship.move(keycode);
+	          } else if (keycode == 39) {
+	            //right
+	            e.preventDefault();
+	            this.spaceship.move(keycode);
+	          } else if (keycode == 32) {
+	            //spacebar
+	            e.preventDefault();
+	            this.spaceship.fire();
+	          }
 	        }
 	      }
+	    }
+	  }, {
+	    key: 'keyUp',
+	    value: function keyUp(e) {
+	      this.allowed = true;
 	    }
 	  }]);
 	
@@ -429,6 +450,7 @@
 	      bullet.scaleX = 2;
 	      bullet.scaleY = 2;
 	      bullet.name = 'spaceshipBullet';
+	      createjs.Sound.play("cannon");
 	      return bullet;
 	    }
 	  }, {
@@ -439,7 +461,9 @@
 	      var x = aliens[randNum].localToGlobal(0, 0).x + aliens[randNum].image.width / 2;
 	      var y = aliens[randNum].localToGlobal(0, 0).y + aliens[randNum].image.height;
 	
+	      createjs.Sound.play("shoot");
 	      var bullet = new createjs.Bitmap('/assets/images/alienbullet.png');
+	
 	      bullet.setBounds(x, y, bullet.image.width, bullet.image.height);
 	      bullet.x = x;
 	      bullet.y = y;
@@ -495,6 +519,7 @@
 	                spaceship.bullets.splice(i, 1);
 	                alienContainer.removeChild(_alien);
 	                stage.removeChild(bullet);
+	                createjs.Sound.play("invaderkilled");
 	              }
 	            }
 	          }
@@ -537,7 +562,9 @@
 	        for (var i = 0; i < bullets.length; i++) {
 	          if (bullets[i].y + bullets[i].image.height >= spaceship.y && bullets[i].x <= spaceship.x + spaceship.image.width && bullets[i].x + bullets[i].image.width >= spaceship.x) {
 	            //hit
+	            createjs.Sound.play("explosion");
 	            (0, _helper.updateLives)(stage);
+	            stage.update();
 	            stage.removeChild(bullets[i]);
 	            alien.bullets.splice(i, 1);
 	            spaceship.x = canvas.width / 2 - spaceship.image.width / 2;
@@ -603,7 +630,6 @@
 	      tryAgain.y = canvas.width / 2;
 	      // debugger;
 	      stage.addChild(text, tryAgain);
-	      stage.update();
 	    })();
 	  } else {
 	    $('#lives').html(newLives.toString());
