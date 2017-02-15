@@ -279,7 +279,6 @@
 	      document.body.appendChild(levelTitle);
 	      document.body.appendChild(level);
 	
-	      //need this
 	      this.stage.update();
 	    }
 	  }, {
@@ -293,6 +292,7 @@
 	      this.aliens.draw();
 	      this.spaceship.draw();
 	      createjs.Sound.muted = false;
+	      createjs.Ticker.setPaused(false);
 	      createjs.Ticker.removeAllEventListeners();
 	      createjs.Ticker.setFPS(20);
 	      createjs.Ticker.on("tick", function () {
@@ -436,16 +436,11 @@
 	            e.preventDefault();
 	            this.spaceship.fire();
 	            this.handleNextKeypress = false;
-	            this.setHandleNextKeypressTrueAfterDelay(500);
+	            this.setHandleNextKeypressTrueAfterDelay(300);
 	          }
 	        }
 	      }
 	    }
-	
-	    // keyUp(e) {
-	    //   this.allowed = true;
-	    // }
-	
 	  }]);
 	
 	  return SpaceInvadersGame;
@@ -614,6 +609,35 @@
 	      bullet.height = 3;
 	      return bullet;
 	    }
+	
+	    // static checkHits(stage, spaceship, alien) {
+	    //   let alienContainer = stage.getChildByName('alienContainer');
+	    //   let bullets = spaceship.bullets;
+	    //   if (alienContainer && bullets.length > 0) {
+	    //     let aliens = alienContainer.children;
+	    //     if (aliens.length == 0){
+	    //       stage.removeChild(alien.aliens);
+	    //       nextLevel(stage, spaceship, alien);
+	    //     } else {
+	    //       for (let i = 0; i < bullets.length; i++){
+	    //         for (let j = 0; j < aliens.length; j++){
+	    //           let bullet = bullets[i];
+	    //           let alien = aliens[j];
+	    //           if ( bullet.y <= alien.localToGlobal(0,0).y + alien.image.height &&
+	    //                 bullet.x <= alien.localToGlobal(0,0).x + alien.image.width &&
+	    //                 bullet.x >= alien.localToGlobal(0,0).x) {
+	    //                   incrementScore();
+	    //                   spaceship.bullets.splice(i, 1);
+	    //                   alienContainer.removeChild(alien);
+	    //                   stage.removeChild(bullet);
+	    //                   createjs.Sound.play("invaderkilled");
+	    //           }
+	    //         }
+	    //       }
+	    //     }
+	    //   }
+	    // }
+	
 	  }, {
 	    key: 'checkHits',
 	    value: function checkHits(stage, spaceship, alien) {
@@ -625,13 +649,13 @@
 	          stage.removeChild(alien.aliens);
 	          (0, _helper.nextLevel)(stage, spaceship, alien);
 	        } else {
-	          for (var i = 0; i < bullets.length; i++) {
-	            for (var j = 0; j < aliens.length; j++) {
-	              var bullet = bullets[i];
-	              var _alien = aliens[j];
-	              if (bullet.y <= _alien.localToGlobal(0, 0).y + _alien.image.height && bullet.x <= _alien.localToGlobal(0, 0).x + _alien.image.width && bullet.x >= _alien.localToGlobal(0, 0).x) {
+	          for (var i = 0; i < aliens.length; i++) {
+	            for (var j = 0; j < bullets.length; j++) {
+	              var _alien = aliens[i];
+	              var bullet = bullets[j];
+	              if ((0, _helper.collisionTest)(_alien, bullet)) {
 	                (0, _helper.incrementScore)();
-	                spaceship.bullets.splice(i, 1);
+	                spaceship.bullets.splice(j, 1);
 	                alienContainer.removeChild(_alien);
 	                stage.removeChild(bullet);
 	                createjs.Sound.play("invaderkilled");
@@ -641,33 +665,6 @@
 	        }
 	      }
 	    }
-	
-	    // static checkHits(stage, spaceship, alien) {
-	    //   let alienContainer = stage.getChildByName('alienContainer');
-	    //   let bullets = spaceship.bullets;
-	    //   if (alienContainer && bullets.length > 0) {
-	    //     let aliens = alienContainer.children;
-	    //     if (aliens.length == 0) {
-	    //       stage.removeChild(alien.aliens);
-	    //       alien.draw(4);
-	    //     } else {
-	    //       //checking each alien - hitTest
-	    //       for (let i = 0; i < aliens.length; i++) {
-	    //         for (let j = 0; j < bullets.length; j++) {
-	    //           let alien = aliens[i];
-	    //           let bullet = bullets[j];
-	    //           if (collisionTest(alien, bullet)) {
-	    //             incrementScore();
-	    //             spaceship.bullets.splice(j, 1);
-	    //             alienContainer.removeChild(alien);
-	    //             stage.removeChild(bullet);
-	    //           }
-	    //         }
-	    //       }
-	    //     }
-	    //   }
-	    // }
-	
 	  }, {
 	    key: 'checkIfDamaged',
 	    value: function checkIfDamaged(stage, spaceshipClass, alien) {
@@ -717,11 +714,9 @@
 	  var newLevel = parseInt($('#level').html()) + 1;
 	  $('#level').html(newLevel.toString());
 	  delayTicker(1000);
-	  alien.moveRate += 2;
+	  alien.moveRate += 3;
 	  alien.draw();
 	};
-	
-	var gotHit = function gotHit() {};
 	
 	var updateLives = function updateLives(stage) {
 	  var lives = $('#lives').html();
@@ -730,6 +725,7 @@
 	    (function () {
 	      $('#lives').html(newLives.toString());
 	      stage.removeAllChildren();
+	      createjs.Ticker.paused = true;
 	      var text = new createjs.Text("Game Over", "100px Arial", "#ff7700");
 	      text.x = canvas.width / 2 - 260;
 	      text.y = canvas.height / 2 - 100;
@@ -771,18 +767,16 @@
 	  createjs.Ticker.setPaused(false);
 	};
 	
-	var gameOver = function gameOver() {};
-	
 	var collisionTest = function collisionTest(alien, bullet) {
 	  var alienX1 = alien.localToGlobal(0, 0).x;
-	  var alienX2 = alien.localToGlobal(0, 0).x + alien.image.width;
+	  var alienX2 = alien.localToGlobal(0, 0).x + alien.image.width * 2;
 	  var alienY1 = alien.localToGlobal(0, 0).y;
-	  var alienY2 = alien.localToGlobal(0, 0).y + alien.image.height;
+	  var alienY2 = alien.localToGlobal(0, 0).y + alien.image.height * 2;
 	
 	  var bulletX1 = bullet.x;
-	  var bulletX2 = bullet.x + bullet.image.width;
+	  var bulletX2 = bullet.x + bullet.image.width * 2;
 	  var bulletY1 = bullet.y;
-	  var bulletY2 = bullet.y + bullet.image.height;
+	  var bulletY2 = bullet.y + bullet.image.height * 2;
 	
 	  if ((bulletX1 >= alienX1 && bulletX1 <= alienX2 || bulletX2 >= alienX1 && bulletX2 <= alienX2) && (bulletY1 <= alienY2 && bulletY1 >= alienY1 || bulletY2 <= alienY2 && bulletY2 >= alienY1)) {
 	    return true;
@@ -794,7 +788,6 @@
 	exports.incrementScore = incrementScore;
 	exports.nextLevel = nextLevel;
 	exports.updateLives = updateLives;
-	exports.gameOver = gameOver;
 	exports.collisionTest = collisionTest;
 
 /***/ },
