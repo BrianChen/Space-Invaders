@@ -95,12 +95,15 @@
 	
 	    this.stage = stage;
 	    this.canvas = canvas;
-	    this.allowed = true;
+	    this.handleNextKeypress = true;
 	
 	    this.play = this.play.bind(this);
 	    this.setHeader = this.setHeader.bind(this);
 	    this.togglePause = this.togglePause.bind(this);
+	    this.toggleMute = this.toggleMute.bind(this);
 	    this.loadSound = this.loadSound.bind(this);
+	    this.setHandleNextKeypressTrue = this.setHandleNextKeypressTrue.bind(this);
+	    this.setHandleNextKeypressTrueAfterDelay = this.setHandleNextKeypressTrueAfterDelay.bind(this);
 	    this.init();
 	  }
 	
@@ -134,10 +137,25 @@
 	      pauseImg.onload = function () {
 	        var pauseBM = new createjs.Bitmap(pauseImg);
 	        pauseBM.addEventListener('click', _this2.togglePause);
-	        pauseBM.x = canvas.width - pauseBM.image.width - 40;
-	        pauseBM.y = 20;
+	        pauseBM.x = canvas.width - pauseBM.image.width - 150;
+	        pauseBM.y = 40;
+	        pauseBM.scaleX = 1.5;
+	        pauseBM.scaleY = 1.5;
 	        pauseBM.name = 'pauseBM';
 	        _this2.stage.addChild(pauseBM);
+	      };
+	
+	      var soundImg = new Image();
+	      soundImg.src = 'assets/images/sound-icon.png';
+	      soundImg.onload = function () {
+	        var soundBM = new createjs.Bitmap(soundImg);
+	        soundBM.addEventListener('click', _this2.toggleMute);
+	        soundBM.x = canvas.width - soundBM.image.width - 90;
+	        soundBM.y = 38;
+	        soundBM.scaleX = 1.8;
+	        soundBM.scaleY = 1.8;
+	        soundBM.name = 'soundBM';
+	        _this2.stage.addChild(soundBM);
 	      };
 	
 	      var scoreTitle = document.createElement('div');
@@ -195,7 +213,7 @@
 	      livesTitle.style.top = 0;
 	      livesTitle.style.bottom = '549px';
 	      livesTitle.style.left = 0;
-	      livesTitle.style.right = '89px';
+	      livesTitle.style.right = '200px';
 	
 	      var lives = document.createElement('div');
 	      lives.id = 'lives';
@@ -213,13 +231,53 @@
 	      lives.style.marginBottom = 'auto';
 	      lives.style.top = 0;
 	      lives.style.bottom = '549px';
-	      lives.style.left = '50px';
-	      lives.style.right = '0px';
+	      lives.style.left = '0px';
+	      lives.style.right = '60px';
+	
+	      var levelTitle = document.createElement('div');
+	      levelTitle.id = 'levelTitle';
+	      levelTitle.innerHTML = 'Level: ';
+	      levelTitle.style.height = '20px';
+	      levelTitle.style.width = '50px';
+	      levelTitle.style.backgroundColor = 'black';
+	      levelTitle.style.color = 'yellow';
+	      levelTitle.style.fontWeight = 'bold';
+	      levelTitle.style.fontSize = '22px';
+	      levelTitle.style.position = "absolute";
+	      levelTitle.style.marginLeft = 'auto';
+	      levelTitle.style.marginRight = 'auto';
+	      levelTitle.style.marginTop = 'auto';
+	      levelTitle.style.marginBottom = 'auto';
+	      levelTitle.style.top = 0;
+	      levelTitle.style.bottom = '549px';
+	      levelTitle.style.left = '110px';
+	      levelTitle.style.right = '0px';
+	
+	      var level = document.createElement('div');
+	      level.id = 'level';
+	      level.innerHTML = '1';
+	      level.style.height = '20px';
+	      level.style.width = '50px';
+	      level.style.backgroundColor = 'black';
+	      level.style.color = 'yellow';
+	      level.style.fontWeight = 'bold';
+	      level.style.fontSize = '22px';
+	      level.style.position = "absolute";
+	      level.style.marginLeft = 'auto';
+	      level.style.marginRight = 'auto';
+	      level.style.marginTop = 'auto';
+	      level.style.marginBottom = 'auto';
+	      level.style.top = 0;
+	      level.style.bottom = '549px';
+	      level.style.left = '250px';
+	      level.style.right = '0px';
 	
 	      document.body.appendChild(scoreTitle);
 	      document.body.appendChild(score);
 	      document.body.appendChild(livesTitle);
 	      document.body.appendChild(lives);
+	      document.body.appendChild(levelTitle);
+	      document.body.appendChild(level);
 	
 	      //need this
 	      this.stage.update();
@@ -234,71 +292,129 @@
 	      this.aliens = new _alien2.default(this.stage);
 	      this.aliens.draw();
 	      this.spaceship.draw();
+	      createjs.Sound.muted = false;
 	      createjs.Ticker.removeAllEventListeners();
-	      debugger;
 	      createjs.Ticker.setFPS(20);
 	      createjs.Ticker.on("tick", function () {
 	        return _this3.handleTick();
 	      });
 	      document.addEventListener("keydown", this.keyDown.bind(this));
-	      document.addEventListener("keyup", this.keyUp.bind(this));
 	    }
 	  }, {
 	    key: 'handleTick',
 	    value: function handleTick() {
 	      if (!createjs.Ticker.getPaused()) {
 	        this.aliens.move();
-	        _bullet2.default.moveBullets(this.stage, this.spaceship);
+	        this.spaceship.moveBullets();
 	        _bullet2.default.checkHits(this.stage, this.spaceship, this.aliens);
 	        _bullet2.default.checkIfDamaged(this.stage, this.spaceship, this.aliens);
 	        var randomNum = Math.floor(Math.random() * 30) + 1;
-	        if (randomNum == 3 || randomNum == 2) {
+	        if (randomNum == 3) {
 	          this.aliens.fireAlienBullets();
 	        }
-	        _bullet2.default.moveAlienBullets(this.stage, this.aliens);
+	        this.aliens.moveAlienBullets();
 	        this.stage.update();
 	      }
 	    }
 	  }, {
-	    key: 'togglePause',
-	    value: function togglePause() {
+	    key: 'toggleMute',
+	    value: function toggleMute() {
 	      var _this4 = this;
 	
-	      var isPaused = !createjs.Ticker.getPaused();
-	      createjs.Ticker.setPaused(isPaused);
-	      if (isPaused) {
+	      var isMuted = createjs.Sound.muted;
+	      createjs.Sound.muted = !isMuted;
+	      if (isMuted) {
 	        (function () {
-	          var pauseBM = _this4.stage.getChildByName('pauseBM');
-	          _this4.stage.removeChild(pauseBM);
-	          var playImg = new Image();
-	          playImg.src = 'assets/images/play-icon.png';
-	          playImg.onload = function () {
-	            var playBM = new createjs.Bitmap(playImg);
-	            playBM.addEventListener('click', _this4.togglePause);
-	            playBM.x = canvas.width - playBM.image.width - 40;
-	            playBM.y = 40;
-	            playBM.name = "playBM";
-	            _this4.stage.addChild(playBM);
+	          var muteBM = _this4.stage.getChildByName('muteBM');
+	          _this4.stage.removeChild(muteBM);
+	          var soundImg = new Image();
+	          soundImg.src = 'assets/images/sound-icon.png';
+	          soundImg.onload = function () {
+	            var soundBM = new createjs.Bitmap(soundImg);
+	            soundBM.addEventListener('click', _this4.toggleMute);
+	            soundBM.x = canvas.width - soundBM.image.width - 90;
+	            soundBM.y = 38;
+	            soundBM.scaleX = 1.8;
+	            soundBM.scaleY = 1.8;
+	            soundBM.name = "soundBM";
+	            _this4.stage.addChild(soundBM);
 	            _this4.stage.update();
 	          };
 	        })();
 	      } else {
 	        (function () {
-	          var playBM = _this4.stage.getChildByName('playBM');
-	          _this4.stage.removeChild(playBM);
-	          var pauseImg = new Image();
-	          pauseImg.src = 'assets/images/pause-icon.png';
-	          pauseImg.onload = function () {
-	            var pauseBM = new createjs.Bitmap(pauseImg);
-	            pauseBM.addEventListener('click', _this4.togglePause);
-	            pauseBM.x = canvas.width - pauseBM.image.width - 40;
-	            pauseBM.y = 40;
-	            pauseBM.name = 'pauseBM';
-	            _this4.stage.addChild(pauseBM);
+	          var soundBM = _this4.stage.getChildByName('soundBM');
+	          _this4.stage.removeChild(soundBM);
+	          var muteImg = new Image();
+	          muteImg.src = 'assets/images/mute-icon.png';
+	          muteImg.onload = function () {
+	            var muteBM = new createjs.Bitmap(muteImg);
+	            muteBM.addEventListener('click', _this4.toggleMute);
+	            muteBM.x = canvas.width - muteBM.image.width - 90;
+	            muteBM.y = 38;
+	            muteBM.scaleX = 1.8;
+	            muteBM.scaleY = 1.8;
+	            muteBM.name = "muteBM";
+	            _this4.stage.addChild(muteBM);
 	            _this4.stage.update();
 	          };
 	        })();
 	      }
+	    }
+	  }, {
+	    key: 'togglePause',
+	    value: function togglePause() {
+	      var _this5 = this;
+	
+	      var isPaused = !createjs.Ticker.getPaused();
+	      createjs.Ticker.setPaused(isPaused);
+	      if (isPaused) {
+	        (function () {
+	          var pauseBM = _this5.stage.getChildByName('pauseBM');
+	          _this5.stage.removeChild(pauseBM);
+	          var playImg = new Image();
+	          playImg.src = 'assets/images/play-icon.png';
+	          playImg.onload = function () {
+	            var playBM = new createjs.Bitmap(playImg);
+	            playBM.addEventListener('click', _this5.togglePause);
+	            playBM.x = canvas.width - playBM.image.width - 150;
+	            playBM.y = 40;
+	            playBM.scaleX = 1.5;
+	            playBM.scaleY = 1.5;
+	            playBM.name = "playBM";
+	            _this5.stage.addChild(playBM);
+	            _this5.stage.update();
+	          };
+	        })();
+	      } else {
+	        (function () {
+	          var playBM = _this5.stage.getChildByName('playBM');
+	          _this5.stage.removeChild(playBM);
+	          var pauseImg = new Image();
+	          pauseImg.src = 'assets/images/pause-icon.png';
+	          pauseImg.onload = function () {
+	            var pauseBM = new createjs.Bitmap(pauseImg);
+	            pauseBM.addEventListener('click', _this5.togglePause);
+	            pauseBM.x = canvas.width - pauseBM.image.width - 150;
+	            pauseBM.y = 40;
+	            pauseBM.scaleX = 1.5;
+	            pauseBM.scaleY = 1.5;
+	            pauseBM.name = 'pauseBM';
+	            _this5.stage.addChild(pauseBM);
+	            _this5.stage.update();
+	          };
+	        })();
+	      }
+	    }
+	  }, {
+	    key: 'setHandleNextKeypressTrue',
+	    value: function setHandleNextKeypressTrue() {
+	      this.handleNextKeypress = true;
+	    }
+	  }, {
+	    key: 'setHandleNextKeypressTrueAfterDelay',
+	    value: function setHandleNextKeypressTrueAfterDelay(delay) {
+	      setTimeout(this.setHandleNextKeypressTrue, delay);
 	    }
 	  }, {
 	    key: 'keyDown',
@@ -306,31 +422,30 @@
 	      var keycode = e.which || window.event.keycode;
 	
 	      if (!createjs.Ticker.getPaused()) {
-	        if (e.repeat != undefined) {
-	          this.allowed = !e.repeat;
-	        }
-	        if (this.allowed) {
-	          if (keycode == 37) {
-	            //left
-	            e.preventDefault();
-	            this.spaceship.move(keycode);
-	          } else if (keycode == 39) {
-	            //right
-	            e.preventDefault();
-	            this.spaceship.move(keycode);
-	          } else if (keycode == 32) {
-	            //spacebar
+	        if (keycode == 37) {
+	          //left
+	          e.preventDefault();
+	          this.spaceship.move(keycode);
+	        } else if (keycode == 39) {
+	          //right
+	          e.preventDefault();
+	          this.spaceship.move(keycode);
+	        } else if (keycode == 32) {
+	          //spacebar
+	          if (this.handleNextKeypress) {
 	            e.preventDefault();
 	            this.spaceship.fire();
+	            this.handleNextKeypress = false;
+	            this.setHandleNextKeypressTrueAfterDelay(500);
 	          }
 	        }
 	      }
 	    }
-	  }, {
-	    key: 'keyUp',
-	    value: function keyUp(e) {
-	      this.allowed = true;
-	    }
+	
+	    // keyUp(e) {
+	    //   this.allowed = true;
+	    // }
+	
 	  }]);
 	
 	  return SpaceInvadersGame;
@@ -383,6 +498,14 @@
 	      };
 	    }
 	  }, {
+	    key: "resetPosition",
+	    value: function resetPosition() {
+	      var spaceship = this.stage.getChildByName('spaceship');
+	      spaceship.x = this.x = canvas.width / 2 - spaceship.image.width / 2;
+	      spaceship.y = this.y = canvas.height - spaceship.image.height - 20;
+	      this.stage.update();
+	    }
+	  }, {
 	    key: "move",
 	    value: function move(keycode) {
 	      var spaceship = this.stage.getChildByName("spaceship");
@@ -407,9 +530,27 @@
 	    value: function fire() {
 	      var bullet = _bullet2.default.drawSpaceshipBullet(this.x, this.y);
 	      this.bullets.push(bullet);
-	
 	      this.stage.addChild(bullet);
 	      this.stage.update();
+	    }
+	  }, {
+	    key: "moveBullets",
+	    value: function moveBullets() {
+	      for (var i = 0; i < this.bullets.length; i++) {
+	        this.bullets[i].y -= 30;
+	        if (this.bullets[i].y < 200) {
+	          stage.removeChild(this.bullets[i]);
+	          this.bullets.splice(i, 1);
+	        }
+	      }
+	    }
+	  }, {
+	    key: "removeAllBullets",
+	    value: function removeAllBullets() {
+	      for (var i = 0; i < this.bullets.length; i++) {
+	        stage.removeChild(this.bullets[i]);
+	      }
+	      this.bullets = [];
 	    }
 	  }]);
 	
@@ -474,32 +615,6 @@
 	      return bullet;
 	    }
 	  }, {
-	    key: 'moveBullets',
-	    value: function moveBullets(stage, spaceship) {
-	      var bullets = spaceship.bullets;
-	      for (var i = 0; i < bullets.length; i++) {
-	        bullets[i].y -= 30;
-	        if (bullets[i].y < 200) {
-	          stage.removeChild(bullets[i]);
-	          spaceship.bullets.splice(i, 1);
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'moveAlienBullets',
-	    value: function moveAlienBullets(stage, alien) {
-	      var bullets = alien.bullets;
-	      var deleteBulletIndexs = [];
-	
-	      for (var i = 0; i < bullets.length; i++) {
-	        if (bullets[i].y > canvas.height - 20) {
-	          stage.removeChild(bullets[i]);
-	          alien.bullets.splice(i, 1);
-	        }
-	        bullets[i].y += 30;
-	      }
-	    }
-	  }, {
 	    key: 'checkHits',
 	    value: function checkHits(stage, spaceship, alien) {
 	      var alienContainer = stage.getChildByName('alienContainer');
@@ -508,7 +623,7 @@
 	        var aliens = alienContainer.children;
 	        if (aliens.length == 0) {
 	          stage.removeChild(alien.aliens);
-	          alien.draw();
+	          (0, _helper.nextLevel)(stage, spaceship, alien);
 	        } else {
 	          for (var i = 0; i < bullets.length; i++) {
 	            for (var j = 0; j < aliens.length; j++) {
@@ -595,9 +710,16 @@
 	  $('#score').html(newScore.toString());
 	};
 	
-	// const newWave = (stage) => {
-	//   stage.
-	// }
+	var nextLevel = function nextLevel(stage, spaceship, alien) {
+	  spaceship.removeAllBullets();
+	  alien.removeAllAlienBullets();
+	  spaceship.resetPosition();
+	  var newLevel = parseInt($('#level').html()) + 1;
+	  $('#level').html(newLevel.toString());
+	  delayTicker(1000);
+	  alien.moveRate += 2;
+	  alien.draw();
+	};
 	
 	var gotHit = function gotHit() {};
 	
@@ -625,17 +747,21 @@
 	        $('#score').remove();
 	        $('#lives').remove();
 	        $('#livesTitle').remove();
+	        $('#levelTitle').remove();
+	        $('#level').remove();
 	      });
 	      tryAgain.x = canvas.width / 2 - 100;
 	      tryAgain.y = canvas.width / 2;
-	      // debugger;
 	      stage.addChild(text, tryAgain);
 	    })();
 	  } else {
 	    $('#lives').html(newLives.toString());
 	  }
 	  createjs.Ticker.setPaused(true);
-	  var delay = 1000;
+	  delayTicker(1000);
+	};
+	
+	var delayTicker = function delayTicker(delay) {
 	  var startTime = createjs.Ticker.getTime();
 	  while (1) {
 	    if (createjs.Ticker.getTime() - startTime > delay) {
@@ -666,6 +792,7 @@
 	};
 	
 	exports.incrementScore = incrementScore;
+	exports.nextLevel = nextLevel;
 	exports.updateLives = updateLives;
 	exports.gameOver = gameOver;
 	exports.collisionTest = collisionTest;
@@ -697,6 +824,7 @@
 	    this.stage = stage;
 	    this.right = true;
 	    this.bullets = [];
+	    this.moveRate = 2;
 	  }
 	
 	  _createClass(Alien, [{
@@ -738,14 +866,14 @@
 	          this.right = !this.right;
 	          this.aliens.y += 40;
 	        } else {
-	          this.aliens.x += 5;
+	          this.aliens.x += this.moveRate;
 	        }
 	      } else {
 	        if (this.aliens.x < 20) {
 	          this.right = !this.right;
 	          this.aliens.y += 40;
 	        } else {
-	          this.aliens.x -= 5;
+	          this.aliens.x -= this.moveRate;
 	        }
 	      }
 	    }
@@ -756,6 +884,25 @@
 	      this.bullets.push(bullet);
 	      this.stage.addChild(bullet);
 	      this.stage.update();
+	    }
+	  }, {
+	    key: 'moveAlienBullets',
+	    value: function moveAlienBullets() {
+	      for (var i = 0; i < this.bullets.length; i++) {
+	        if (this.bullets[i].y > canvas.height - 20) {
+	          stage.removeChild(this.bullets[i]);
+	          this.bullets.splice(i, 1);
+	        }
+	        this.bullets[i].y += 30;
+	      }
+	    }
+	  }, {
+	    key: 'removeAllAlienBullets',
+	    value: function removeAllAlienBullets() {
+	      for (var i = 0; i < this.bullets; i++) {
+	        stage.removeChild(this.bullets[i]);
+	      }
+	      this.bullets = [];
 	    }
 	  }]);
 	
