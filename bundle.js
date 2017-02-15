@@ -598,7 +598,7 @@
 	      var y = aliens[randNum].localToGlobal(0, 0).y + aliens[randNum].image.height;
 	
 	      createjs.Sound.play("shoot");
-	      var bullet = new createjs.Bitmap('/assets/images/alienbullet.png');
+	      var bullet = new createjs.Bitmap('assets/images/alien-bullet.png');
 	
 	      bullet.setBounds(x, y, bullet.image.width, bullet.image.height);
 	      bullet.x = x;
@@ -609,35 +609,6 @@
 	      bullet.height = 3;
 	      return bullet;
 	    }
-	
-	    // static checkHits(stage, spaceship, alien) {
-	    //   let alienContainer = stage.getChildByName('alienContainer');
-	    //   let bullets = spaceship.bullets;
-	    //   if (alienContainer && bullets.length > 0) {
-	    //     let aliens = alienContainer.children;
-	    //     if (aliens.length == 0){
-	    //       stage.removeChild(alien.aliens);
-	    //       nextLevel(stage, spaceship, alien);
-	    //     } else {
-	    //       for (let i = 0; i < bullets.length; i++){
-	    //         for (let j = 0; j < aliens.length; j++){
-	    //           let bullet = bullets[i];
-	    //           let alien = aliens[j];
-	    //           if ( bullet.y <= alien.localToGlobal(0,0).y + alien.image.height &&
-	    //                 bullet.x <= alien.localToGlobal(0,0).x + alien.image.width &&
-	    //                 bullet.x >= alien.localToGlobal(0,0).x) {
-	    //                   incrementScore();
-	    //                   spaceship.bullets.splice(i, 1);
-	    //                   alienContainer.removeChild(alien);
-	    //                   stage.removeChild(bullet);
-	    //                   createjs.Sound.play("invaderkilled");
-	    //           }
-	    //         }
-	    //       }
-	    //     }
-	    //   }
-	    // }
-	
 	  }, {
 	    key: 'checkHits',
 	    value: function checkHits(stage, spaceship, alien) {
