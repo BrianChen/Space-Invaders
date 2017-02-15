@@ -12,9 +12,13 @@ Space Invaders is a Japanese shooting video game released in 1978 by Taito. It b
 
 This version of Space Invaders features rich graphics instead of the traditional old school bit images.  This provides a more modern feel that attracts players.  These graphics were rendered on the canvas using Bitmap from EaselJS which allows manipulation such as scaling and changing coordinates.
 
+![Start Screen](./assets/images/spaceinvader-welcome.png)
+
 ### Increasingly hard Levels
 
 The current level is displayed on top of the canvas.  With each level the aliens start moving faster and shooting more bullets.  The difficulty is increased at a considerable rate and gives players a good challenge.
+
+![Game Screen](./assets/images/spaceinvader.png)
 
 ### Sound
 
