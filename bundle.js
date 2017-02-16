@@ -294,7 +294,7 @@
 	      createjs.Sound.muted = false;
 	      createjs.Ticker.setPaused(false);
 	      createjs.Ticker.removeAllEventListeners();
-	      createjs.Ticker.setFPS(20);
+	      createjs.Ticker.setFPS(30);
 	      createjs.Ticker.on("tick", function () {
 	        return _this3.handleTick();
 	      });
